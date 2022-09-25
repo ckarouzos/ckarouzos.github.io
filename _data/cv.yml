@@ -56,12 +56,6 @@
       items:
         - Angular, Material, HTML, CSS
 
-- title: Honors and Awards
-  type: time_table
-  contents:
-    - year: 
-      items: 
-
 - title: Languages
   type: list
   contents:
@@ -73,7 +67,7 @@
     - title: Natural Language Processing
       items: 
         - Machine Learning for NLP
-        - NLP Adaptations
+        - NLP Applications
         - Legal NLP
         - Transfer Learning, Domain Adaptation
     - title: Speech Processing
