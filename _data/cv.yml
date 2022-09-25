@@ -2,96 +2,93 @@
   type: map
   contents:
     - name: Full Name
-      value: Albert Einstein
+      value: Constantinos Karouzos
     - name: Date of Birth
-      value: 14th March 1879
-    - name: Languages
-      value: English, German
+      value: 1st February 1996
+    - name: Nationality
+      value: Greek
 
 - title: Education
   type: time_table
   contents:
     - title: PhD
-      institution: University of Zurich, Zurich, Switzerland
-      year: 1905
+      institution: The University of Sheffield, United Kingdom
+      year: 2022 - Ongoing
       description:
-        - Description 1.
-        - Description 2.
-        - title: Description 3.
-          contents:
-            - Sub-description 1.
-            - Sub-description 2.
-    - title: Federal teaching diploma
-      institution: Eidgenössische Technische Hochschule, Zurich, Switzerland
-      year: 1900
+        - UKRI Center of Doctoral Studies in Speech and Language Technologies
+        - Department of Computer Science
+        - Integrated Postgraduate Diploma (PGDip) in Speech and Language Technologies Leadership
+    - title: Integrated M.Eng. in Electrical and Computer Engineering
+      institution: National Technical University of Athens
+      year: 2014 - 2020
       description:
-        - Description 1.
-        - Description 2.
-
+        - 'Concentration: Computer Software & Computer Systems'
+        - 'Minor: Management & Decision Support Systems'
+        - 'Thesis: Unsupervised Domain Adaptation for Natural Language Processing.'
+        - 'Supervisor: Prof. Alexandros Potamianos'
+    - title: Erasmus Exchange Program
+      institution: Politecnico di Milano (Poli.Mi.)
+      year: 2018
+    - title: High School
+      institution: Evaggeliki Model High School of Smyrni
+      year: 2014
 - title: Experience
   type: time_table
   contents:
-    - title: Professor of Theoretical Physics
-      institution: Institute for Advanced Study, Princeton University
-      year: 1933 - 1955
+    - title: Machine Learning Engineer
+      institution: Behavioral Signals Technologies
+      year: 2021 - 2022
       description:
-        - Description 1.
-        - Description 2.
-        - title: Description 3.
-          contents:
-            - Sub-description 1.
-            - Sub-description 2.
-    - title: Visiting Professor
-      institution: California Institute of Technology, Pasadena, California, US
-      year: 1933
-      description:
-        - Description 1.
-        - Description 2.
+    - title: Soldier for Research and Informatics
+      institution: Hellenic Army General Staff
+      year: 2020 - 2021
 
-    - title: Director
-      institution: Kaiser Wilhelm Institute for Physics, Berlin, Germany.
-      year: 1917-1933
-
-    - title: Professor of Theoretical Physics
-      institution: Karl-Ferdinand University, Prague, Czechoslovakia
-      year: 1911 - 1917
-      description:
-
-    - title: Associate Professor of Theoretical Physics
-      institution: University of Zurich, Zurich, Switzerland
-      year: 1909 - 1911
-
-- title: Open Source Projects
-  type: time_table
+- title: Skills
+  type: nested_list
   contents:
-    - title: <a href="https://github.com/alshedivat/al-folio">al-folio</a>
-      year: 2015-now
-      description: A beautiful, simple, clean, and responsive Jekyll theme for academics.
+    - title: Programming Languages
+      items: 
+        - Python, Bash, C, C++, Java, Javascript
+    - title: Machine Learning
+      items:
+        - pytorch, Tensorflow, Scikit-Learn
+    - title: Web Development
+      items:
+        - Angular, Material, HTML, CSS
 
 - title: Honors and Awards
   type: time_table
   contents:
-    - year: 1921
+    - year: 
       items: 
-        - Nobel Prize in Physics 
-        - Matteucci Medal
-    - year: 2029
-      items: 
-        - Max Planck Medal
+
+- title: Languages
+  type: list
+  contents:
+    - English (Fluent), French (Intermediate), Italian (Basic), Greek(Native) 
 
 - title: Academic Interests
   type: nested_list
   contents:
-    - title: Topic 1.
+    - title: Natural Language Processing
       items: 
-        - Description 1.
-        - Description 2.
-    - title: Topic 2.
+        - Machine Learning for NLP
+        - NLP Adaptations
+        - Legal NLP
+        - Transfer Learning, Domain Adaptation
+    - title: Speech Processing
       items:
-        - Description 1.
-        - Description 2.
+        - Speech Emotion Recognition
+        - Affective Computing  
+
+- title: Societies
+  type: list
+  contents:
+    - Association for Computational Linguistics (ACL), Member
+    - Technical Chamber of Greece (TEE-TCG), Member
+    - IEEE, Member
 
 - title: Other Interests
   type: list
   contents:
-    - <u>Hobbies:</u> Hobby 1, Hobby 2, etc.
+    - <u>Hobbies:</u> Travelling, Exploring Flavours, Books, News, Printed Newspapers

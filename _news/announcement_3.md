@@ -1,7 +1,8 @@
 ---
 layout: post
-date: 2016-01-15 07:59:00-0400
+title: Leaving Bebaviorals
+date: 2022-08-31 16:11:00-0400
 inline: true
 ---
 
-A simple inline announcement with Markdown emoji! :sparkles: :smile:
+My last day as ML Engineer at Behavioral Signals, signals a year to be greatfully remembered!

@@ -1,82 +1,40 @@
----
----
 
-@string{aps = {American Physical Society,}}
-
-@book{einstein1956investigations,
-  bibtex_show={true},
-  title={Investigations on the Theory of the Brownian Movement},
-  author={Einstein, Albert},
-  year={1956},
-  publisher={Courier Corporation,},
-  preview={brownian-motion.gif}
+@article{karouzos-etal-2021-udalm,
+    title = {{UDALM}: Unsupervised Domain Adaptation through Language Modeling},
+    selected={true},
+    author = {Karouzos, Constantinos  and
+      Paraskevopoulos, Georgios  and
+      Potamianos, Alexandros},
+    booktitle = {Proceedings of the 2021 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies},
+    month = {6},
+    year = {2021},
+    address = {Online},
+    publisher = {Association for Computational Linguistics},
+    abbr = {NAACL 2021},
+    url = {https://aclanthology.org/2021.naacl-main.203},
+    doi = {10.18653/v1/2021.naacl-main.203},
+    pages = {2579--2590},
+    abstract = {In this work we explore Unsupervised Domain Adaptation (UDA) of pretrained language models for downstream tasks. We introduce UDALM, a fine-tuning procedure, using a mixed classification and Masked Language Model loss, that can adapt to the target domain distribution in a robust and sample efficient manner. Our experiments show that performance of models trained with the mixed loss scales with the amount of available target data and the mixed loss can be effectively used as a stopping criterion during UDA training. Furthermore, we discuss the relationship between A-distance and the target error and explore some limitations of the Domain Adversarial Training approach. Our method is evaluated on twelve domain pairs of the Amazon Reviews Sentiment dataset, yielding 91.74{\%} accuracy, which is an 1.11{\%} absolute improvement over the state-of-the-art.},
+    arxiv = {2104.07078},
+    video = {https://aclanthology.org/2021.naacl-main.203.mp4},
+    code = {https://github.com/ckarouzos/slp_daptmlm},
+    html = {https://aclanthology.org/2021.naacl-main.203/}
 }
 
-@article{einstein1950meaning,
-  abbr={AJP},
-  bibtex_show={true},
-  title={The meaning of relativity},
-  author={Einstein, Albert and Taub, AH},
-  journal={American Journal of Physics,},
-  volume={18},
-  number={6},
-  pages={403--404},
-  year={1950},
-  publisher={American Association of Physics Teachers,}
-}
-
-@article{PhysRev.47.777,
-  abbr={PhysRev},
-  title={Can Quantum-Mechanical Description of Physical Reality Be Considered Complete?},
-  author={Einstein, A. and Podolsky, B. and Rosen, N.},
-  abstract={In a complete theory there is an element corresponding to each element of reality. A sufficient condition for the reality of a physical quantity is the possibility of predicting it with certainty, without disturbing the system. In quantum mechanics in the case of two physical quantities described by non-commuting operators, the knowledge of one precludes the knowledge of the other. Then either (1) the description of reality given by the wave function in quantum mechanics is not complete or (2) these two quantities cannot have simultaneous reality. Consideration of the problem of making predictions concerning a system on the basis of measurements made on another system that had previously interacted with it leads to the result that if (1) is false then (2) is also false. One is thus led to conclude that the description of reality as given by a wave function is not complete.},
-  journal={Phys. Rev.,},
-  volume={47},
-  issue={10},
-  pages={777--780},
-  numpages={0},
-  year={1935},
-  month={May},
-  publisher=aps,
-  doi={10.1103/PhysRev.47.777},
-  url={http://link.aps.org/doi/10.1103/PhysRev.47.777},
-  html={https://journals.aps.org/pr/abstract/10.1103/PhysRev.47.777},
-  pdf={example_pdf.pdf},
-  selected={true}
-}
-
-@article{einstein1905molekularkinetischen,
-  title={{\"U}ber die von der molekularkinetischen Theorie der W{\"a}rme geforderte Bewegung von in ruhenden Fl{\"u}ssigkeiten suspendierten Teilchen},
-  author={Einstein, A.},
-  journal={Annalen der physik,},
-  volume={322},
-  number={8},
-  pages={549--560},
-  year={1905},
-  publisher={Wiley Online Library}
-}
-
-@article{einstein1905movement,
-  abbr={Ann. Phys.},
-  title={Un the movement of small particles suspended in statiunary liquids required by the molecular-kinetic theory 0f heat},
-  author={Einstein, A.},
-  journal={Ann. Phys.,},
-  volume={17},
-  pages={549--560},
-  year={1905}
-}
-
-@article{einstein1905electrodynamics,
-  title={On the electrodynamics of moving bodies},
-  author={Einstein, A.},
-  year={1905}
-}
-
-@book{przibram1967letters,
-  bibtex_show={true},
-  title={Letters on wave mechanics},
-  author={Einstein, Albert and Schrödinger, Erwin and Planck, Max and Lorentz, Hendrik Antoon and Przibram, Karl},
-  year={1967},
-  publisher={Vision},
-  preview={wave-mechanics.gif}
+@article{chatziagapi-etal-2022-audio,
+    title = {Audio and ASR-based Filled Pause Detection},
+    selected={false},
+    author = {Chatziagapi, Aggelina  and
+      Sgouropoulos, Dimitris  and
+      Karouzos, Constantinos and
+      Melistas, Thomas and
+      Giannakopoulos, Theodoros and
+      Katsamanis, Athanasios and
+      Narayanan, Shrikanth},
+    booktitle = {Proceedings of 2022 10th International Conference on Affective Computing and Intelligent Interaction (ACII)},
+    month = {10},
+    year = {2022},
+    address = {Nara, Japan},
+    abbr = {ACII 2022},
+    abstract = {Filled pauses (or fillers) are the most common form of speech disfluencies and they can be recognized as hesitation markers ("um", "uh" and "er") made by speakers, usually to gain extra time while thinking their next words. Filled pauses are very frequent in spontaneous speech. Their detection is therefore rather important for two basic reasons: (a) their existence influences the performance of individual components, like Automatic Speech Recognition system (ASR), in human-machine interaction and (b) their frequency can characterize the overall speech quality of a particular speaker, as it can be strongly associated with the speaker's confidence. Despite that, only limited work has been published for the detection of filled pauses in speech, especially through audio. In this work, we propose a framework for filled pause detection using both audio and textual information. For the audio modality, we transfer knowledge from a plethora of supervised tasks, such as emotion or speaking rate, using Convolutional Neural Networks (CNNs). For the text modality, we develop a temporal Recurrent Neural Network (RNN) method that takes into account textual information derived from an ASR system. In addition, the proposed transfer learning approach for the audio classifier leads to better results when benchmarked on our internal dataset for which the text is not transcribed but estimated by an ASR system. In this case, a simple late fusion approach boosts the performance even further. This proves that the audio approach is suitable for real-world applications where the transcribed text is not available and has to leverage imperfect ASR results, or even the absence of textual information (to reduce computational cost).}
 }

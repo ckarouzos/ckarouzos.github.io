@@ -1,34 +1,29 @@
-"Adams":
-  - firstname: ["Edwin", "E.", "E. P.", "Edwin Plimpton"]
-    url: https://en.wikipedia.org/wiki/Edwin_Plimpton_Adams
+"Potamianos":
+  - firstname: ["Alexandros", "A."]
+    url: http://www.potam.com
 
-"Podolsky":
-  - firstname: ["Boris", "B.", "B. Y.", "Boris Yakovlevich"]
-    url: https://en.wikipedia.org/wiki/Boris_Podolsky
+"Paraskevopoulos":
+  - firstname: ["Georgios", "G."]
+    url: http://georgepar.github.io/
 
-"Rosen":
-  - firstname: ["Nathan", "N."]
-    url: https://en.wikipedia.org/wiki/Nathan_Rosen
+"Chatziagapi":
+  - firstname: ["Aggelina", "A."]
+    url: https://aggelinacha.github.io/
 
-"Bach": 
-  - firstname: ["Johann Sebastian", "J. S."]
-    url: https://en.wikipedia.org/wiki/Johann_Sebastian_Bach
+"Giannakopoulos":
+  - firstname: ["Thodoris", "Theodoros", "T."]
+    url: https://tyiannak.github.io/
 
-  - firstname: ["Carl Philipp Emanuel", "C. P. E."]
-    url: https://en.wikipedia.org/wiki/Carl_Philipp_Emanuel_Bach
+"Katsamanis":
+  - firstname: ["Athanasios", "A."]
+    url: https://www.ilsp.gr/en/members/katsamanis-athanasios-nassos/
 
-"Przibram":
-  - firstname: ["Karl"]
-    url: https://link.springer.com/article/10.1007/s00016-019-00242-z
+"Narayanan":
+  - firstname: ["Shrikanth", "S."]
+    url: https://sail.usc.edu/people/shri.html
 
-"Schrödinger":
-  - firstname: ["Erwin"]
-    url: https://en.wikipedia.org/wiki/Erwin_Schr%C3%B6dinger
+"Sgouropoulos":
+  -firstname: ["Dimitris", "D."]
 
-"Lorentz":
-  - firstname: ["Hendrik Antoon"]
-    url: https://en.wikipedia.org/wiki/Hendrik_Lorentz
-
-"Planck":
-  - firstname: ["Max"]
-    url: https://en.wikipedia.org/wiki/Max_Planck
+"Melistas":
+  -firstname: ["Thomas", "T."]
