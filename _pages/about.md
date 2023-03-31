@@ -24,7 +24,7 @@ social: true  # includes social icons at the bottom of the page
 
 Hi! I'm Constantinos.
 
- A first year PhD student at the [UKRI CDT in Speech and Language Technologies and their Applications](https://slt-cdt.sheffield.ac.uk/), at The University of Sheffield, UK.
+ A first year PhD student at the [UKRI CDT in Speech and Language Technologies and their Applications](https://slt-cdt.sheffield.ac.uk/), at The University of Sheffield, UK. I'm working on efficient transfer learning for language models across many tasks. My supervisor is [Prof. Nikos Aletras](https://nikosaletras.com/).
 
 
 Last year, I worked as a Machine Learning Engineer at [Behavioral Signals](https://behavioralsignals.com/), a startup aiming to bridging the communication gap between humans and machines by introducing emotional intelligence, from speech, into conversations with AI. I was building speech models and working on MLOps. 
