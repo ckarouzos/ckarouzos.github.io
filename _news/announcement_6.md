@@ -1,7 +1,7 @@
 ---
 layout: post
-date: 2023-03-31 12:00:00-0000
+date: 2023-02-11 12:00:00-0000
 inline: true
 ---
 
-I'm really excited to announce that I have been officially allocated to my PhD project, titled "Efficient transfer learning for pre-train language models across many tasks" at the [CDT for Speech and Language Tech.](https://slt-cdt.sheffield.ac.uk/home) under the supervision of [Prof. Nikos Aletras](https://nikosaletras.com/).
+[Machines and AI STEM in action school outreach initiative](https://www.imperial.ac.uk/be-inspired/schools-outreach/secondary-schools/stem-in-action/machines-ai/) by Imperial College London and [Semina Mertzani](https://www.imperial.ac.uk/be-inspired/schools-outreach/secondary-schools/stem-in-action/machines-ai/semina---profile/) have included a [profile](https://www.imperial.ac.uk/be-inspired/schools-outreach/secondary-schools/stem-in-action/machines-ai/semina---profile/constantinos-karouzos/) of my work in their website. [Check out](https://www.imperial.ac.uk/be-inspired/schools-outreach/secondary-schools/stem-in-action/machines-ai/semina---profile/constantinos-karouzos/) how I explain my research, my inspiration, my STEM hero and my opinion on the most significant inventions! I'm very happy to be part of this initiative and I hope that this will help to inspire more young people to pursue a career in STEM.
