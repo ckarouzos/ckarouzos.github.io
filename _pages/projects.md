@@ -6,6 +6,7 @@ description:
 nav: true
 nav_order: 2
 ---
+
 <!-- _pages/projects.md -->
 <div class="projects">
   {% if site.enable_project_categories %}

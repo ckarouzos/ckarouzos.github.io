@@ -15,19 +15,19 @@
       institution: The University of Sheffield, United Kingdom
       year: 2022 - Ongoing
       description:
-        - 'UKRI Center of Doctoral Studies in Speech and Language Technologies'
-        - 'School of Computer Science'
-        - 'Integrated Postgraduate Diploma (PGDip) in Speech and Language Technologies Leadership'
-        - 'Efficient transfer learning for pre-train language models across many tasks'
-        - 'Supervisor: Prof. Nikos Aletras'
+        - "UKRI Center of Doctoral Studies in Speech and Language Technologies"
+        - "School of Computer Science"
+        - "Integrated Postgraduate Diploma (PGDip) in Speech and Language Technologies Leadership"
+        - "Efficient transfer learning for pre-train language models across many tasks"
+        - "Supervisor: Prof. Nikos Aletras"
     - title: Integrated M.Eng. in Electrical and Computer Engineering
       institution: National Technical University of Athens
       year: 2014 - 2020
       description:
-        - 'Concentration: Computer Software & Computer Systems'
-        - 'Minor: Management & Decision Support Systems'
-        - 'Thesis: Unsupervised Domain Adaptation for Natural Language Processing.'
-        - 'Supervisor: Prof. Alexandros Potamianos'
+        - "Concentration: Computer Software & Computer Systems"
+        - "Minor: Management & Decision Support Systems"
+        - "Thesis: Unsupervised Domain Adaptation for Natural Language Processing."
+        - "Supervisor: Prof. Alexandros Potamianos"
     - title: Erasmus Exchange Program
       institution: Politecnico di Milano (Poli.Mi.)
       year: 2018
@@ -49,7 +49,7 @@
   type: nested_list
   contents:
     - title: Programming Languages
-      items: 
+      items:
         - Python, Bash, C, C++, Java, Javascript
     - title: Machine Learning
       items:
@@ -61,13 +61,13 @@
 - title: Languages
   type: list
   contents:
-    - English (Fluent), French (Intermediate), Italian (Basic), Greek(Native) 
+    - English (Fluent), French (Intermediate), Italian (Basic), Greek(Native)
 
 - title: Academic Interests
   type: nested_list
   contents:
     - title: Natural Language Processing
-      items: 
+      items:
         - Machine Learning for NLP
         - NLP Applications
         - Legal NLP
@@ -75,7 +75,7 @@
     - title: Speech Processing
       items:
         - Speech Emotion Recognition
-        - Affective Computing  
+        - Affective Computing
 
 - title: Societies
   type: list
