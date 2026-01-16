@@ -24,9 +24,9 @@ social: true  # includes social icons at the bottom of the page
 
 Hi! I'm Constantinos.
 
- A second year PhD student at the [UKRI CDT in Speech and Language Technologies and their Applications](https://slt-cdt.sheffield.ac.uk/), at the School of Computer Science in the University of Sheffield, UK. 
+ A PhD student at the [UKRI CDT in Speech and Language Technologies and their Applications](https://slt-cdt.sheffield.ac.uk/), at the School of Computer Science in the University of Sheffield, UK. 
  
- I'm working on transfer learning for language models across many tasks, focusing on preference optimisation and domain adaptation. My supervisor is [Prof. Nikos Aletras](https://nikosaletras.com/).
+ I'm working on preference optimisation and domain adaptation. My supervisor is [Prof. Nikos Aletras](https://nikosaletras.com/).
 
 In 2020, I graduated from [School of ECE](https://www.ece.ntua.gr/en) at the National Technical University of Athens, obtaining an Integrated M.Eng. in Electrical and Computer Engineering. My thesis title is "Unsupervised Domain Adaptation for Natural Language Processing" and my advisor was [Prof. Alex Potamianos](https://slp-ntua.github.io/potam/). Previously, I worked as a Machine Learning Engineer at [Behavioral Signals](https://behavioralsignals.com/), a startup aiming to bridging the communication gap between humans and machines by introducing emotional intelligence, from speech, into conversations with AI. I was building speech models and working on MLOps. 
 
