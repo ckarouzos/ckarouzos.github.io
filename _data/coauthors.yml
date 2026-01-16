@@ -23,15 +23,15 @@
     url: https://sail.usc.edu/people/shri.html
 
 "Sgouropoulos":
-  -firstname: ["Dimitris", "D."]
+  - firstname: ["Dimitris", "D."]
 
 "Melistas":
-  -firstname: ["Thomas", "T."]
+  - firstname: ["Thomas", "T."]
 
 "Aletras":
-  -firstname: ["Nikolaos", "N."]
-   url: https://nikosaletras.com/
+  - firstname: ["Nikolaos", "N."]
+    url: https://nikosaletras.com/
 
 "Tan":
-  -firstname: ["Xingwei", "X."]
+  - firstname: ["Xingwei", "X."]
     url: https://xingwei-tan.github.io/
