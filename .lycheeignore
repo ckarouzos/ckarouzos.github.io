@@ -1,0 +1,3 @@
+# URLs that work in browsers but reject the link checker's requests (false positives)
+# acii-conf.net returns 415 Unsupported Media Type to lychee but is reachable normally
+https://acii-conf.net/2022/
