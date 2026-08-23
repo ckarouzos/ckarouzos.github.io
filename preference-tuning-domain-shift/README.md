@@ -14,7 +14,7 @@ From the repository root:
 python -m http.server 8000 --directory project_page
 ```
 
-Then open <http://localhost:8000/>.
+Then open the local server root on port 8000 in your browser.
 
 ## Publish under the personal homepage
 
