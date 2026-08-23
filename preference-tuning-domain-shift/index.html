@@ -1,479 +1,883 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <title>Preference Tuning Generalization and Diversity Under Domain Shift</title>
-  <meta name="title" content="An Empirical Study on Preference Tuning Generalization and Diversity Under Domain Shift">
-  <meta name="description" content="A systematic study of how preference tuning objectives and adaptation strategies generalize across domains, and the diversity cost of synthetic supervision.">
-  <meta name="keywords" content="preference tuning, domain adaptation, domain shift, DPO, KTO, ORPO, PPO, GRPO, output diversity, language models">
-  <meta name="author" content="Constantinos Karouzos, Xingwei Tan, Nikolaos Aletras">
-  <meta name="robots" content="index, follow">
-  <meta name="theme-color" content="#2563eb">
+    <title>Preference Tuning Generalization and Diversity Under Domain Shift</title>
+    <meta name="title" content="An Empirical Study on Preference Tuning Generalization and Diversity Under Domain Shift" />
+    <meta
+      name="description"
+      content="A systematic study of how preference tuning objectives and adaptation strategies generalize across domains, and the diversity cost of synthetic supervision."
+    />
+    <meta
+      name="keywords"
+      content="preference tuning, domain adaptation, domain shift, DPO, KTO, ORPO, PPO, GRPO, output diversity, language models"
+    />
+    <meta name="author" content="Constantinos Karouzos, Xingwei Tan, Nikolaos Aletras" />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#2563eb" />
 
-  <link rel="canonical" href="https://ckarouzos.github.io/preference-tuning-domain-shift/">
-  <link rel="icon" href="static/images/favicon.svg" type="image/svg+xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+    <link rel="canonical" href="https://ckarouzos.github.io/preference-tuning-domain-shift/" />
+    <link rel="icon" href="static/images/favicon.svg" type="image/svg+xml" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" />
 
-  <meta property="og:type" content="article">
-  <meta property="og:site_name" content="University of Sheffield">
-  <meta property="og:title" content="Preference Tuning Generalization and Diversity Under Domain Shift">
-  <meta property="og:description" content="Target-domain pseudo-labeling improves transfer but can induce severe mode collapse.">
-  <meta property="og:url" content="https://ckarouzos.github.io/preference-tuning-domain-shift/">
-  <meta property="og:image" content="https://ckarouzos.github.io/preference-tuning-domain-shift/static/images/social-preview.png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="Preference tuning under domain shift: generalization and diversity trade-offs.">
-  <meta property="article:published_time" content="2026-01-09T00:00:00Z">
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="University of Sheffield" />
+    <meta property="og:title" content="Preference Tuning Generalization and Diversity Under Domain Shift" />
+    <meta property="og:description" content="Target-domain pseudo-labeling improves transfer but can induce severe mode collapse." />
+    <meta property="og:url" content="https://ckarouzos.github.io/preference-tuning-domain-shift/" />
+    <meta property="og:image" content="https://ckarouzos.github.io/preference-tuning-domain-shift/static/images/social-preview.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Preference tuning under domain shift: generalization and diversity trade-offs." />
+    <meta property="article:published_time" content="2026-01-09T00:00:00Z" />
 
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Preference Tuning Generalization and Diversity Under Domain Shift">
-  <meta name="twitter:description" content="Target-domain pseudo-labeling improves transfer but can induce severe mode collapse.">
-  <meta name="twitter:image" content="https://ckarouzos.github.io/preference-tuning-domain-shift/static/images/social-preview.png">
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Preference Tuning Generalization and Diversity Under Domain Shift" />
+    <meta name="twitter:description" content="Target-domain pseudo-labeling improves transfer but can induce severe mode collapse." />
+    <meta name="twitter:image" content="https://ckarouzos.github.io/preference-tuning-domain-shift/static/images/social-preview.png" />
 
-  <meta name="citation_title" content="An Empirical Study on Preference Tuning Generalization and Diversity Under Domain Shift">
-  <meta name="citation_author" content="Karouzos, Constantinos">
-  <meta name="citation_author" content="Tan, Xingwei">
-  <meta name="citation_author" content="Aletras, Nikolaos">
-  <meta name="citation_publication_date" content="2026">
-  <meta name="citation_conference_title" content="EMNLP 2026">
-  <meta name="citation_arxiv_id" content="2601.05882">
-  <meta name="citation_pdf_url" content="https://ckarouzos.github.io/preference-tuning-domain-shift/static/pdfs/paper.pdf">
+    <meta name="citation_title" content="An Empirical Study on Preference Tuning Generalization and Diversity Under Domain Shift" />
+    <meta name="citation_author" content="Karouzos, Constantinos" />
+    <meta name="citation_author" content="Tan, Xingwei" />
+    <meta name="citation_author" content="Aletras, Nikolaos" />
+    <meta name="citation_publication_date" content="2026" />
+    <meta name="citation_conference_title" content="EMNLP 2026" />
+    <meta name="citation_arxiv_id" content="2601.05882" />
+    <meta name="citation_pdf_url" content="https://ckarouzos.github.io/preference-tuning-domain-shift/static/pdfs/paper.pdf" />
 
-  <link rel="stylesheet" href="static/css/bulma.min.css">
-  <link rel="stylesheet" href="static/css/index.css?v=2">
-  <script defer src="static/js/main.js?v=2"></script>
+    <link rel="stylesheet" href="static/css/bulma.min.css" />
+    <link rel="stylesheet" href="static/css/index.css?v=2" />
+    <script defer src="static/js/main.js?v=2"></script>
 
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "ScholarlyArticle",
-    "headline": "An Empirical Study on Preference Tuning Generalization and Diversity Under Domain Shift",
-    "author": [
-      {"@type": "Person", "name": "Constantinos Karouzos", "url": "https://ckarouzos.github.io/"},
-      {"@type": "Person", "name": "Xingwei Tan", "url": "https://xingwei-tan.github.io/"},
-      {"@type": "Person", "name": "Nikolaos Aletras", "url": "https://nikosaletras.com/"}
-    ],
-    "datePublished": "2026-01-09",
-    "publisher": {"@type": "Organization", "name": "Association for Computational Linguistics"},
-    "url": "https://ckarouzos.github.io/preference-tuning-domain-shift/",
-    "sameAs": "https://arxiv.org/abs/2601.05882",
-    "image": "https://ckarouzos.github.io/preference-tuning-domain-shift/static/images/social-preview.png",
-    "keywords": ["preference tuning", "domain shift", "domain adaptation", "output diversity", "language models"],
-    "isAccessibleForFree": true
-  }
-  </script>
-</head>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "ScholarlyArticle",
+        "headline": "An Empirical Study on Preference Tuning Generalization and Diversity Under Domain Shift",
+        "author": [
+          { "@type": "Person", "name": "Constantinos Karouzos", "url": "https://ckarouzos.github.io/" },
+          { "@type": "Person", "name": "Xingwei Tan", "url": "https://xingwei-tan.github.io/" },
+          { "@type": "Person", "name": "Nikolaos Aletras", "url": "https://nikosaletras.com/" }
+        ],
+        "datePublished": "2026-01-09",
+        "publisher": { "@type": "Organization", "name": "Association for Computational Linguistics" },
+        "url": "https://ckarouzos.github.io/preference-tuning-domain-shift/",
+        "sameAs": "https://arxiv.org/abs/2601.05882",
+        "image": "https://ckarouzos.github.io/preference-tuning-domain-shift/static/images/social-preview.png",
+        "keywords": ["preference tuning", "domain shift", "domain adaptation", "output diversity", "language models"],
+        "isAccessibleForFree": true
+      }
+    </script>
+  </head>
 
-<body>
-  <main>
-    <section class="hero publication-header">
-      <div class="hero-body">
-        <div class="container is-max-desktop">
-          <div class="columns is-centered">
-            <div class="column has-text-centered">
-              <h1 class="title is-1 publication-title">An Empirical Study on Preference Tuning Generalization and Diversity Under Domain Shift</h1>
-
-              <div class="is-size-5 publication-authors">
-                <span class="author-block"><a href="https://ckarouzos.github.io/">Constantinos Karouzos</a>,</span>
-                <span class="author-block"><a href="https://xingwei-tan.github.io/">Xingwei Tan</a>,</span>
-                <span class="author-block"><a href="https://nikosaletras.com/">Nikolaos Aletras</a></span>
-              </div>
-
-              <div class="is-size-5 publication-authors publication-venue-block">
-                <span class="author-block">University of Sheffield<br><strong>EMNLP 2026</strong></span>
-              </div>
-
-              <div class="publication-links">
-                <span class="link-block">
-                  <a href="static/pdfs/paper.pdf" class="external-link button is-normal is-rounded is-dark">
-                    <span class="icon" aria-hidden="true">📄</span><span>Paper</span>
-                  </a>
-                </span>
-                <span class="link-block">
-                  <a href="https://arxiv.org/abs/2601.05882" class="external-link button is-normal is-rounded is-dark">
-                    <span class="icon arxiv-icon" aria-hidden="true">a<span>X</span></span><span>arXiv</span>
-                  </a>
-                </span>
-                <span class="link-block">
-                  <a href="https://github.com/ckarouzos/prefadap" class="external-link button is-normal is-rounded is-dark">
-                    <span class="icon" aria-hidden="true">⌘</span><span>Code</span>
-                  </a>
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="hero teaser">
-      <div class="container is-max-desktop">
+  <body>
+    <main>
+      <section class="hero publication-header">
         <div class="hero-body">
-          <h2 class="subtitle has-text-centered teaser-summary">Adaptation strategy—especially target-domain pseudo-labeling—often matters more than the alignment objective. Its strongest generalization gains, however, come with a loss of output diversity.</h2>
-        </div>
-      </div>
-    </section>
+          <div class="container is-max-desktop">
+            <div class="columns is-centered">
+              <div class="column has-text-centered">
+                <h1 class="title is-1 publication-title">An Empirical Study on Preference Tuning Generalization and Diversity Under Domain Shift</h1>
 
-    <section class="section hero is-light">
-      <div class="container is-max-desktop">
-        <div class="columns is-centered has-text-justified">
-          <div class="column is-four-fifths">
-            <h2 class="title is-3">Abstract</h2>
-            <div class="content has-text-justified">
-              <p>Preference tuning aligns base language models to human judgments of quality, helpfulness, or safety by optimizing over explicit preference signals rather than likelihood alone. Prior work has shown that preference tuning degrades performance and reduces helpfulness outside the training domain. However, the extent to which adaptation strategies mitigate this domain shift remains unexplored. We address this challenge by conducting a comprehensive and systematic study of alignment generalization under domain shift. We compare five popular alignment objectives and various adaptation strategies from source to target, including target-domain supervised fine-tuning and pseudo-labeling, across summarization, question-answering helpfulness, and safety alignment tasks. Our findings reveal systematic differences in generalization across alignment objectives under domain shift. We show that adaptation strategies based on pseudo-labeling substantially reduce domain-shift degradation but induce mode collapse, revealing a generalization–diversity trade-off.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section publication-body setup-section">
-      <div class="container is-max-desktop">
-        <div class="content project-section">
-          <h2 class="title is-3">Problem setup</h2>
-          <p>We study preference tuning when labeled preferences are available only in a source domain. A policy π<sub>θ</sub> learns from the labeled source preference set D<sub>S</sub><sup>pref</sup> and an unlabeled target-domain corpus D<sub>T</sub>, then generates outputs that should remain high quality after the domain shift.</p>
-        </div>
-
-        <div class="setup-grid">
-          <section class="setup-block">
-            <h3>Available supervision</h3>
-            <p><strong>Source domain D<sub>S</sub>:</strong> prompts with demonstrations, preference pairs, or desirable/undesirable labels, depending on the objective.</p>
-            <p><strong>Target domain D<sub>T</sub>:</strong> prompts and responses without preference annotations.</p>
-          </section>
-          <section class="setup-block">
-            <h3>Learning objective</h3>
-            <p>Use source preference supervision and target-domain data to learn a policy that generalizes to D<sub>T</sub>. Quality means task performance, stylistic appropriateness, or safety, depending on the testbed.</p>
-          </section>
-          <section class="setup-block">
-            <h3>Adaptation axis</h3>
-            <p>We compare source SFT, mixed source–target SFT, target SFT, and target pseudo-labeling. For pseudo-labeling, a larger teacher supplies preferred target-domain responses that are formatted for each alignment objective.</p>
-          </section>
-          <section class="setup-block">
-            <h3>Alignment axis</h3>
-            <p>We compare five objectives spanning offline and online paradigms: DPO, KTO, ORPO, RLHF-PPO, and GRPO, alongside the SFT baselines.</p>
-          </section>
-        </div>
-
-        <figure class="publication-figure setup-figure">
-          <a href="static/images/study-design.png" title="Open the full-resolution study design">
-            <img src="static/images/study-design.png" alt="Study design: source and target domains feed four adaptation strategies and five preference alignment methods, evaluated for generalization and diversity." width="1008" height="514">
-          </a>
-          <figcaption>Figure 1: Preference optimization under domain shift is decomposed into <strong>adaptation</strong> and <strong>alignment</strong>. Click the figure to open it at full resolution.</figcaption>
-        </figure>
-
-        <div class="testbed-grid" aria-label="Evaluation testbeds">
-          <div><strong>Summarization</strong><span>Reddit TL;DR → CNN/DailyMail</span></div>
-          <div><strong>QA helpfulness</strong><span>AskEngineers → AskCulinary</span></div>
-          <div><strong>Safety</strong><span>Cybercrime → Violence / Physical Harm</span></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section hero is-light publication-body artifact-section">
-      <div class="container is-max-desktop">
-        <div class="content project-section">
-          <h2 class="title is-3">What are the main findings?</h2>
-          <ul class="finding-list">
-            <li><strong>Pseudo-labeling dominates summarization transfer.</strong> For Llama-3.1-8B, pseudo-labeled SFT achieves the highest target win rate (83.37), while lifting OLMo-3-7B DPO to 72.26, above all non-synthetic methods.</li>
-            <li><strong>Offline alignment over-specializes to the source domain.</strong> Source-only DPO on Llama-3.1-8B reaches 89.87 in domain but 58.09 out of domain; GRPO keeps its gap at 3.79 on the same testbed.</li>
-            <li><strong>QA helpfulness is comparatively stable under the near-domain shift.</strong> Scores remain within a narrow ±8-point gap, but a domain-aware judge reveals that standard helpfulness evaluation can miss epistemic and stylistic mismatch.</li>
-            <li><strong>Safety transfer is model- and objective-dependent.</strong> Pseudo-labeled objectives other than PPO exceed 95% target safety on Llama-3.1-8B. Without pseudo-labeling, KTO achieves the highest OLMo-3-7B target safety score (76.49%).</li>
-          </ul>
-        </div>
-
-        <figure class="publication-figure wide-figure">
-          <a href="static/images/main-results.png" title="Open the full-resolution results table">
-            <img src="static/images/main-results.png" alt="Full results table with source and target performance for summarization, QA helpfulness, and safety across SFT, DPO, KTO, ORPO, PPO, and GRPO." width="2802" height="1572" loading="lazy">
-          </a>
-          <figcaption>Table 1: Source and target performance across the three testbeds. Summarization and QA report LLM-as-a-judge win rates; safety reports safety score. Click the table to open it at full resolution.</figcaption>
-        </figure>
-      </div>
-    </section>
-
-    <section class="section publication-body artifact-section">
-      <div class="container is-max-desktop">
-        <div class="content project-section">
-          <h2 class="title is-3">Why does pseudo-labeling help?</h2>
-          <p>Teacher quality alone does not close the domain gap. For DPO, source-domain pseudo-labeling raises CNN/DailyMail target win rate from 58.09 to 62.88, while target-domain pseudo-labeling reaches 78.50. Because the teacher is the same in both synthetic conditions, the 15.62-point difference isolates the value of domain relevance.</p>
-        </div>
-
-        <div class="table-container paper-table">
-          <table class="table is-striped is-hoverable is-fullwidth">
-            <thead>
-              <tr><th>Method</th><th>SFT data</th><th>Preference data</th><th>Source</th><th>Target</th><th>Gap</th></tr>
-            </thead>
-            <tbody>
-              <tr><th>SFT</th><td>D<sub>S</sub></td><td>—</td><td>59.57</td><td>36.07</td><td>23.50</td></tr>
-              <tr><th>SFT</th><td>D<sub>S</sub><sup>synth</sup></td><td>—</td><td>72.41</td><td>44.15</td><td>28.26</td></tr>
-              <tr><th>SFT</th><td>D<sub>T</sub><sup>synth</sup></td><td>—</td><td>95.70</td><td><strong>83.37</strong></td><td>12.33</td></tr>
-              <tr><th>DPO</th><td>D<sub>S</sub></td><td>D<sub>S</sub></td><td>89.87</td><td>58.09</td><td>31.78</td></tr>
-              <tr><th>DPO</th><td>D<sub>S</sub><sup>synth</sup></td><td>D<sub>S</sub><sup>synth</sup></td><td>90.52</td><td>62.88</td><td>27.64</td></tr>
-              <tr><th>DPO</th><td>D<sub>T</sub><sup>synth</sup></td><td>D<sub>T</sub><sup>synth</sup></td><td>95.79</td><td><strong>78.50</strong></td><td>17.29</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="figure-caption">Table 2: Isolating teacher quality from domain relevance on TL;DR → CNN/DailyMail with Llama-3.1-8B. D<sub>S</sub><sup>synth</sup> denotes source-domain pseudo-labeled data.</p>
-      </div>
-    </section>
-
-    <section class="section hero is-light publication-body artifact-section">
-      <div class="container is-max-desktop">
-        <div class="content project-section">
-          <h2 class="title is-3">What is the cost of pseudo-labeling?</h2>
-          <p>Despite high win rates, pseudo-labeling sharply contracts semantic and syntactic variety in summarization. Semantic diversity drops to 0.07–0.08 across offline objectives, and syntactic diversity falls from 0.86 for source-only SFT to 0.51 for pseudo-labeled SFT.</p>
-          <p>Online RL preserves more diversity under pseudo-labeling: PPO and GRPO retain semantic diversity of 0.22 and 0.25, respectively, compared with 0.07–0.08 for the offline objectives.</p>
-        </div>
-
-        <figure class="publication-figure medium-figure">
-          <img src="static/images/diversity-analysis.png" alt="Bar plots of syntactic, semantic, and logical diversity for six objectives under source-only, target-SFT, mix-SFT, and pseudo-labeled adaptation." width="1222" height="1113" loading="lazy">
-          <figcaption>Figure 2: Syntactic, semantic, and logical diversity in summarization with Llama-3.1-8B.</figcaption>
-        </figure>
-      </div>
-    </section>
-
-    <section class="section publication-body artifact-section">
-      <div class="container is-max-desktop">
-        <div class="content project-section">
-          <h2 class="title is-3">Can a standard judge miss domain mismatch?</h2>
-          <p>Yes. A domain-agnostic helpfulness judge can reward a logically sound response even when it violates AskCulinary’s expected expertise and pragmatic style. A domain-aware judge lowers source-only DPO by 3.83 points, while pseudo-labeled DPO improves by 3.48 points, revealing genuine target-domain calibration.</p>
-        </div>
-
-        <div class="table-container paper-table">
-          <table class="table is-striped is-hoverable is-fullwidth">
-            <thead>
-              <tr><th>Method</th><th>SFT data</th><th>Preference data</th><th>Standard</th><th>Domain-aware</th><th>Δ</th></tr>
-            </thead>
-            <tbody>
-              <tr><th>SFT</th><td>D<sub>S</sub></td><td>—</td><td>60.08</td><td>57.06</td><td>−3.02</td></tr>
-              <tr><th>SFT</th><td>D<sub>S+T</sub></td><td>—</td><td>60.68</td><td>60.24</td><td>−0.44</td></tr>
-              <tr><th>SFT</th><td>D<sub>T</sub></td><td>—</td><td>64.94</td><td>61.45</td><td>−3.49</td></tr>
-              <tr><th>SFT</th><td>D<sub>T</sub><sup>synth</sup></td><td>—</td><td>76.04</td><td>77.60</td><td>+1.56</td></tr>
-              <tr><th>DPO</th><td>D<sub>S</sub></td><td>D<sub>S</sub></td><td>61.45</td><td>57.62</td><td>−3.83</td></tr>
-              <tr><th>DPO</th><td>D<sub>S+T</sub></td><td>D<sub>S</sub></td><td>58.80</td><td>60.94</td><td>+2.14</td></tr>
-              <tr><th>DPO</th><td>D<sub>T</sub></td><td>D<sub>S</sub></td><td>64.69</td><td>61.92</td><td>−2.77</td></tr>
-              <tr><th>DPO</th><td>D<sub>T</sub><sup>synth</sup></td><td>D<sub>T</sub><sup>synth</sup></td><td>75.52</td><td><strong>79.00</strong></td><td><strong>+3.48</strong></td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="figure-caption">Table 3: Standard versus domain-aware judge win rates on AskCulinary with Llama-3.1-8B. Δ = domain-aware − standard.</p>
-      </div>
-    </section>
-
-    <section class="section hero is-light publication-body artifact-section">
-      <div class="container is-max-desktop">
-        <div class="content project-section">
-          <h2 class="title is-3">How much synthetic data is needed?</h2>
-          <p>Reducing the pseudo-labeled data by 90% causes only small changes. For SFT, KTO, and ORPO, the 10% subset slightly outperforms the full synthetic dataset on the target domain, indicating that the benefit is driven by domain relevance rather than volume.</p>
-        </div>
-
-        <div class="table-container paper-table compact-table">
-          <table class="table is-striped is-hoverable is-fullwidth">
-            <thead>
-              <tr><th rowspan="2">Method</th><th rowspan="2">Dataset size</th><th colspan="2">Win rate (%)</th></tr>
-              <tr><th>Source</th><th>Target</th></tr>
-            </thead>
-            <tbody>
-              <tr><th rowspan="2">SFT</th><td>Full</td><td>95.70</td><td>83.37</td></tr>
-              <tr><td>10%</td><td>92.75</td><td><strong>83.68</strong></td></tr>
-              <tr><th rowspan="2">DPO</th><td>Full</td><td>95.79</td><td><strong>78.50</strong></td></tr>
-              <tr><td>10%</td><td><strong>96.30</strong></td><td>77.08</td></tr>
-              <tr><th rowspan="2">KTO</th><td>Full</td><td><strong>95.37</strong></td><td>83.01</td></tr>
-              <tr><td>10%</td><td>95.30</td><td><strong>84.38</strong></td></tr>
-              <tr><th rowspan="2">ORPO</th><td>Full</td><td><strong>96.80</strong></td><td>82.38</td></tr>
-              <tr><td>10%</td><td>92.26</td><td><strong>82.58</strong></td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="figure-caption">Table 4: Data efficiency of pseudo-labeling on TL;DR → CNN/DailyMail with Llama-3.1-8B. The small setting uses 10% of the synthetic data.</p>
-      </div>
-    </section>
-
-    <section class="section publication-body artifact-section">
-      <div class="container is-max-desktop">
-        <div class="content project-section">
-          <h2 class="title is-3">Does the order of SFT stages matter?</h2>
-          <p>Strongly. Target SFT before source SFT reaches a 56.40 target win rate, compared with 35.22 in the reverse order. Adding an intermediate source-SFT stage before source DPO raises target performance further, from 56.82 to 65.56.</p>
-        </div>
-
-        <div class="table-container paper-table sequence-table">
-          <table class="table is-striped is-hoverable is-fullwidth">
-            <thead>
-              <tr><th>Method</th><th>Source win rate</th><th>Target win rate</th></tr>
-            </thead>
-            <tbody>
-              <tr class="table-group"><th colspan="3">SFT order</th></tr>
-              <tr><td>SFT D<sub>T</sub> → SFT D<sub>S</sub></td><td><strong>67.23</strong></td><td><strong>56.40</strong></td></tr>
-              <tr><td>SFT D<sub>S</sub> → SFT D<sub>T</sub></td><td>61.00</td><td>35.22</td></tr>
-              <tr class="table-group"><th colspan="3">Intermediate step</th></tr>
-              <tr><td>SFT D<sub>T</sub> → DPO D<sub>S</sub></td><td>67.83</td><td>56.82</td></tr>
-              <tr><td>SFT D<sub>T</sub> → SFT D<sub>S</sub> → DPO D<sub>S</sub></td><td><strong>91.88</strong></td><td><strong>65.56</strong></td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="figure-caption">Table 5: Win rates on TL;DR → CNN/DailyMail with Llama-3.1-8B when varying the sequence of SFT stages.</p>
-      </div>
-    </section>
-
-    <section class="section publication-body qualitative-section">
-      <div class="container is-widescreen">
-        <div class="content project-section">
-          <h2 class="title is-3">Qualitative case studies</h2>
-          <p>Aggregate win rates hide two different kinds of domain-shift behavior. The examples below reproduce the paper’s appendix outputs in full, without the table layout or ellipses used in the main paper.</p>
-        </div>
-
-        <section class="case-study artifact-case">
-          <div class="case-heading">
-            <span class="case-number">1</span>
-            <div>
-              <h3 class="title is-4">Epistemic drift: engineering advice in a culinary domain</h3>
-              <p>All responses answer the same AskCulinary prompt with Llama-3.1-8B and DPO. Source-only adaptation frames cooking as heat and fat management, while target adaptation moves toward culinary vocabulary and conventions.</p>
-            </div>
-          </div>
-
-          <div class="qual-prompt">
-            <span class="qual-label">User prompt</span>
-            <p>Whenever I roast a turkey or turkey parts I always put chopped celery/carrots/onions underneath in the sheet pan because that's what the instructions typically tell me, but does it serve a purpose of somehow flavoring the turkey or is there another reason for this practice? I was thinking it may have something to do with neutralizing the fat that drips down so it doesn't smoke/burn. I have some string beans in the fridge and about to cook some turkey thighs, any reason I couldn't use those instead of the standard misen poix?</p>
-          </div>
-
-          <div class="persona-legend" aria-label="Highlight legend">
-            <span><i class="legend-swatch culinary-swatch"></i>Culinary persona</span>
-            <span><i class="legend-swatch engineering-swatch"></i>Engineering persona</span>
-          </div>
-
-          <div class="comparison-grid context-grid">
-            <section class="response-block response-context">
-              <h4>Human reference</h4>
-              <p>If you are making roast potatoes I love placing the spuds under the bird (rack in between) and letting the fat drip down into them</p>
-            </section>
-            <section class="response-block response-context">
-              <h4>Base model</h4>
-              <p>Thanks. It is not to flavor the turkey; it is to <mark class="persona-culinary">flavor the gravy</mark> that you will make from the drippings. A lot of people don't like celery and carrots in their gravy, so they use them as a <mark class="persona-culinary">flavoring agent</mark> for the gravy, then remove them before serving the gravy.</p>
-            </section>
-          </div>
-
-          <div class="carousel-toolbar">
-            <p>Compare the four adaptation strategies</p>
-            <div class="carousel-controls">
-              <button type="button" data-carousel-prev="epistemic-carousel" aria-label="Show the previous adaptation">← Previous</button>
-              <span data-carousel-status="epistemic-carousel" aria-live="polite">1 / 4</span>
-              <button type="button" data-carousel-next="epistemic-carousel" aria-label="Show the next adaptation">Next →</button>
-            </div>
-          </div>
-
-          <div class="qual-carousel response-carousel" id="epistemic-carousel" tabindex="0" aria-label="Full outputs for four adaptation strategies">
-            <section class="response-block carousel-slide">
-              <h4>Source-only adaptation <span>SFT D<sub>S</sub> → DPO D<sub>S</sub></span></h4>
-              <p>It’s not just for flavor. It’s to <mark class="persona-engineering">keep the bird from sticking to the pan</mark> and to help <mark class="persona-engineering">protect the bottom of the bird from burning</mark>. When you cook meat, <mark class="persona-engineering">juices (fat) come out</mark> of the meat. If you just put raw meat on a bare pan, the juices will run right off the pan and onto the bottom of your oven. This is bad for two reasons: 1) it <mark class="persona-engineering">creates smoke</mark>, which is why you get that greasy “smoky” smell when you roast a chicken; and 2) it can cause <mark class="persona-engineering">flare ups in the oven and start a fire</mark> (I’ve had this happen once, luckily I caught it early). When you put vegetables underneath the meat, they <mark class="persona-engineering">soak up the fat</mark> and help keep it in the pan. They also make for a <mark class="persona-engineering">nice crusty base</mark> that protects the bottom of the meat and <mark class="persona-engineering">keeps it from sticking and burning</mark>. You’ll see chefs doing this with all kinds of meats, not just poultry. It’s especially important if you’re cooking with a <mark class="persona-engineering">very fatty cut of meat</mark>, like a prime rib roast or a pork shoulder.</p>
-            </section>
-
-            <section class="response-block carousel-slide">
-              <h4>Mixed-domain SFT <span>SFT D<sub>S+T</sub> → DPO D<sub>S</sub></span></h4>
-              <p>It’s not just about flavor. Carrots, onions, and celery are a <mark class="persona-culinary">great base for making stock</mark> from the drippings. It will give you a <mark class="persona-culinary">much better tasting stock</mark>. You can also use <mark class="persona-culinary">herbs and spices</mark> in the mix for <mark class="persona-culinary">added flavor</mark>. The veggies themselves will <mark class="persona-culinary">flavor the drippings</mark>. Once you’ve roasted your turkey, you’ll have an <mark class="persona-culinary">excellent base for gravy</mark>. There are lots of reasons to use vegetables in the bottom of your roasting pan.</p>
-            </section>
-
-            <section class="response-block carousel-slide">
-              <h4>Target-first SFT <span>SFT D<sub>T</sub> → DPO D<sub>S</sub></span></h4>
-              <p>It’s not just about flavor. Carrots, celery, and onions are a great example of the <mark class="persona-culinary">“trinity” in French cooking (aka mirepoix)</mark> because they all have a <mark class="persona-engineering">lot of water content</mark>. So when you’re roasting a bird, you can use them to <mark class="persona-engineering">soak up some of the fat drippings</mark>. That being said, you should *never* use them to clean the pan. You need to leave them in the oven because they will <mark class="persona-engineering">burn to a crisp and stick to the pan</mark>. They’re just a <mark class="persona-culinary">flavor booster</mark> and <mark class="persona-engineering">moisture absorber</mark>. And while we’re here, let’s talk about basting. You should never baste. Basting only moves <mark class="persona-engineering">moisture from the inside of the bird to the outside</mark>. This makes the skin soggy and doesn’t make the bird cook any faster. The skin will crisp up when the <mark class="persona-engineering">juices on top evaporate</mark>.</p>
-            </section>
-
-            <section class="response-block carousel-slide">
-              <h4>Target pseudo-labeling <span>SFT D<sub>T</sub><sup>synth</sup> → DPO D<sub>T</sub><sup>synth</sup></span></h4>
-              <p>Roasting a turkey with vegetables such as celery, carrots, and onions is a common practice, often recommended by cooking instructions. While the purpose of using these vegetables is not always explicitly stated, they can serve multiple functions in the cooking process. One potential reason for using a <mark class="persona-culinary">mirepoix</mark>, which consists of diced celery, carrots, and onions, is to <mark class="persona-culinary">flavor the turkey</mark>. The combination of these three ingredients provides a <mark class="persona-culinary">savory base</mark> that can <mark class="persona-culinary">infuse the meat with flavor</mark>. Additionally, the vegetables can also <mark class="persona-engineering">add moisture</mark> to the dish, helping to keep the turkey juicy and tender.</p>
-            </section>
-          </div>
-
-          <p class="case-takeaway"><strong>Takeaway.</strong> A domain-agnostic judge can rate all four answers as helpful because each supplies a logical justification, while missing whether the answer sounds like appropriate culinary expertise.</p>
-        </section>
-
-        <section class="case-study artifact-case">
-          <div class="case-heading">
-            <span class="case-number">2</span>
-            <div>
-              <h3 class="title is-4">Structural mode collapse under pseudo-labeling</h3>
-              <p>The target pseudo-labeled DPO model maps three unrelated CNN/DailyMail articles onto the same discourse skeleton. The repeated template appears in roughly 10% of its summaries, versus roughly 0.2% for the source-only model and human references, closely tracking the teacher’s rate of 10.5%.</p>
-            </div>
-          </div>
-
-          <div class="carousel-toolbar">
-            <p>Compare three unrelated articles</p>
-            <div class="carousel-controls">
-              <button type="button" data-carousel-prev="collapse-carousel" aria-label="Show the previous article">← Previous</button>
-              <span data-carousel-status="collapse-carousel" aria-live="polite">1 / 3</span>
-              <button type="button" data-carousel-next="collapse-carousel" aria-label="Show the next article">Next →</button>
-            </div>
-          </div>
-
-          <div class="qual-carousel collapse-carousel" id="collapse-carousel" tabindex="0" aria-label="Full mode-collapse outputs for three unrelated articles">
-            <section class="collapse-example carousel-slide">
-              <h4>Food trends <span>Lifestyle review</span></h4>
-              <div class="comparison-grid collapse-grid">
-                <div class="response-block response-context">
-                  <h5>Human reference</h5>
-                  <p>Dietitian Sophie Claessens picks the latest ‘miracle’ foods from fads. Charcoal to ‘detox’, while freekah is new supergrain on the culinary scene. Fermented foods like pickled cabbage act like a probiotic yoghurt. And spiralizers to create vegetable spaghetti can help boost weight loss.</p>
+                <div class="is-size-5 publication-authors">
+                  <span class="author-block"><a href="https://ckarouzos.github.io/">Constantinos Karouzos</a>,</span>
+                  <span class="author-block"><a href="https://xingwei-tan.github.io/">Xingwei Tan</a>,</span>
+                  <span class="author-block"><a href="https://nikosaletras.com/">Nikolaos Aletras</a></span>
                 </div>
-                <div class="response-block">
-                  <h5>Source-only DPO</h5>
-                  <p>Some of the latest food fads are worth a try, others are bonkers. The key is to use common sense and ask yourself whether it's sustainable and whether you'll be able to stick with it. Try spiralizing, freekah, fermented foods and bone broth. Avoid activated charcoal and ‘detox’ products.</p>
+
+                <div class="is-size-5 publication-authors publication-venue-block">
+                  <span class="author-block">University of Sheffield<br /><strong>EMNLP 2026</strong></span>
                 </div>
-                <div class="response-block collapsed-output">
-                  <h5>Target pseudo-labeled DPO</h5>
-                  <p><mark class="template-marker">The article discusses</mark> the latest food trends and their potential health benefits, including activated charcoal, spiralizing, freekeh, fermented foods, sprouted foods, and bone broth. While some of these trends may have some merit, others lack scientific evidence and can be detrimental to one's health. <mark class="template-marker">The author advises</mark> against “detoxing” with activated charcoal, which has only been proven effective for acute poisoning, and cautions against replacing complex carbohydrates with spiralized vegetables. Freekeh, a young green wheat, is a nutritious option, but can be expensive. Fermented foods and bone broth are beneficial for gut health and overall wellness.</p>
+
+                <div class="publication-links">
+                  <span class="link-block">
+                    <a href="static/pdfs/paper.pdf" class="external-link button is-normal is-rounded is-dark">
+                      <span class="icon" aria-hidden="true">📄</span><span>Paper</span>
+                    </a>
+                  </span>
+                  <span class="link-block">
+                    <a href="https://arxiv.org/abs/2601.05882" class="external-link button is-normal is-rounded is-dark">
+                      <span class="icon arxiv-icon" aria-hidden="true">a<span>X</span></span
+                      ><span>arXiv</span>
+                    </a>
+                  </span>
+                  <span class="link-block">
+                    <a href="https://github.com/ckarouzos/prefadap" class="external-link button is-normal is-rounded is-dark">
+                      <span class="icon" aria-hidden="true">⌘</span><span>Code</span>
+                    </a>
+                  </span>
                 </div>
               </div>
-            </section>
+            </div>
+          </div>
+        </div>
+      </section>
 
-            <section class="collapse-example carousel-slide">
-              <h4>Kefalonia <span>Travel and leisure</span></h4>
-              <div class="comparison-grid collapse-grid">
-                <div class="response-block response-context">
-                  <h5>Human reference</h5>
-                  <p>Kefalonia is stunning and doesn't play the Captain Corelli's Mandolin card. Island hasn't been tainted by the crowds its Greek counterparts get. It's a quarter of the size of Spain's Majorca but with a 20th of the tourists. The one must-do outing in Kefalonia is to Fiskardo, a lovely harbour.</p>
-                </div>
-                <div class="response-block">
-                  <h5>Source-only DPO</h5>
-                  <p>Kefalonia, the Greek island featured in Louis de Bernières's novel Captain Corelli's Mandolin, is still remarkably unspoilt. It's a stunning place with a few surprises including the regular appearance of the stray cat named Arthur.</p>
-                </div>
-                <div class="response-block collapsed-output">
-                  <h5>Target pseudo-labeled DPO</h5>
-                  <p><mark class="template-marker">The article discusses</mark> the Greek island of Kefalonia, which was the setting for the novel and film “Captain Corelli's Mandolin”. Despite being a popular tourist destination, Kefalonia remains relatively untouched by mass tourism, with only a few hotels and no large resorts. <mark class="template-marker">The author describes</mark> their experience staying in a villa with a stunning view of Lourdas Beach and meeting a stray cat named Arthur, who became a frequent visitor. They also mention a wildfire that broke out during their stay and the efforts to contain it. <mark class="template-marker">The article recommends</mark> visiting Fiskardo, a lovely harbor, and Tassia, a waterfront restaurant.</p>
-                </div>
-              </div>
-            </section>
+      <section class="hero teaser">
+        <div class="container is-max-desktop">
+          <div class="hero-body">
+            <h2 class="subtitle has-text-centered teaser-summary">
+              Adaptation strategy—especially target-domain pseudo-labeling—often matters more than the alignment objective. Its strongest
+              generalization gains, however, come with a loss of output diversity.
+            </h2>
+          </div>
+        </div>
+      </section>
 
-            <section class="collapse-example carousel-slide">
-              <h4>Video technology in football <span>Sports opinion</span></h4>
-              <div class="comparison-grid collapse-grid">
-                <div class="response-block response-context">
-                  <h5>Human reference</h5>
-                  <p>Celtic were denied place in Scottish Cup final by shocking decision. Leigh Griffiths' header was blocked by Josh Meekings' hand. None of the officials managed to spot the game-changing decision. But FIFA will require a higher profile blunder to change their laws.</p>
-                </div>
-                <div class="response-block">
-                  <h5>Source-only DPO</h5>
-                  <p>Frank Lampard's disallowed goal in 2010 prompted FIFA to introduce goal-line technology, and Scottish fans must hope that another high profile injustice will force a similar change to allow video review.</p>
-                </div>
-                <div class="response-block collapsed-output">
-                  <h5>Target pseudo-labeled DPO</h5>
-                  <p><mark class="template-marker">The article discusses</mark> the reluctance of FIFA to adopt video technology to improve officiating in football, despite the growing number of errors and injustices in the game. <mark class="template-marker">The author cites</mark> examples of goal-line technology being trialed after Frank Lampard's disallowed goal in the 2010 World Cup, but notes that FIFA has been slow to implement it. <mark class="template-marker">The article suggests</mark> that FIFA only acts when a high-profile incident occurs, and that Scottish football fans may need to wait until the World Cup in Russia to see any changes. <mark class="template-marker">The author argues</mark> that video technology, such as Hawk-Eye, could help reduce errors and improve the game.</p>
-                </div>
+      <section class="section hero is-light">
+        <div class="container is-max-desktop">
+          <div class="columns is-centered has-text-justified">
+            <div class="column is-four-fifths">
+              <h2 class="title is-3">Abstract</h2>
+              <div class="content has-text-justified">
+                <p>
+                  Preference tuning aligns base language models to human judgments of quality, helpfulness, or safety by optimizing over explicit
+                  preference signals rather than likelihood alone. Prior work has shown that preference tuning degrades performance and reduces
+                  helpfulness outside the training domain. However, the extent to which adaptation strategies mitigate this domain shift remains
+                  unexplored. We address this challenge by conducting a comprehensive and systematic study of alignment generalization under domain
+                  shift. We compare five popular alignment objectives and various adaptation strategies from source to target, including target-domain
+                  supervised fine-tuning and pseudo-labeling, across summarization, question-answering helpfulness, and safety alignment tasks. Our
+                  findings reveal systematic differences in generalization across alignment objectives under domain shift. We show that adaptation
+                  strategies based on pseudo-labeling substantially reduce domain-shift degradation but induce mode collapse, revealing a
+                  generalization–diversity trade-off.
+                </p>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section publication-body setup-section">
+        <div class="container is-max-desktop">
+          <div class="content project-section">
+            <h2 class="title is-3">Problem setup</h2>
+            <p>
+              We study preference tuning when labeled preferences are available only in a source domain. A policy π<sub>θ</sub> learns from the
+              labeled source preference set D<sub>S</sub><sup>pref</sup> and an unlabeled target-domain corpus D<sub>T</sub>, then generates outputs
+              that should remain high quality after the domain shift.
+            </p>
+          </div>
+
+          <div class="setup-grid">
+            <section class="setup-block">
+              <h3>Available supervision</h3>
+              <p>
+                <strong>Source domain D<sub>S</sub>:</strong> prompts with demonstrations, preference pairs, or desirable/undesirable labels,
+                depending on the objective.
+              </p>
+              <p><strong>Target domain D<sub>T</sub>:</strong> prompts and responses without preference annotations.</p>
+            </section>
+            <section class="setup-block">
+              <h3>Learning objective</h3>
+              <p>
+                Use source preference supervision and target-domain data to learn a policy that generalizes to D<sub>T</sub>. Quality means task
+                performance, stylistic appropriateness, or safety, depending on the testbed.
+              </p>
+            </section>
+            <section class="setup-block">
+              <h3>Adaptation axis</h3>
+              <p>
+                We compare source SFT, mixed source–target SFT, target SFT, and target pseudo-labeling. For pseudo-labeling, a larger teacher supplies
+                preferred target-domain responses that are formatted for each alignment objective.
+              </p>
+            </section>
+            <section class="setup-block">
+              <h3>Alignment axis</h3>
+              <p>
+                We compare five objectives spanning offline and online paradigms: DPO, KTO, ORPO, RLHF-PPO, and GRPO, alongside the SFT baselines.
+              </p>
             </section>
           </div>
 
-          <p class="case-takeaway"><strong>Takeaway.</strong> The summaries remain fluent and informative, so the judge rewards them, but the student inherits the teacher’s repeated discourse frame instead of preserving the target domain’s tonal variation.</p>
-        </section>
-      </div>
-    </section>
+          <figure class="publication-figure setup-figure">
+            <a href="static/images/study-design.png" title="Open the full-resolution study design">
+              <img
+                src="static/images/study-design.png"
+                alt="Study design: source and target domains feed four adaptation strategies and five preference alignment methods, evaluated for generalization and diversity."
+                width="1008"
+                height="514"
+              />
+            </a>
+            <figcaption>
+              Figure 1: Preference optimization under domain shift is decomposed into <strong>adaptation</strong> and <strong>alignment</strong>.
+              Click the figure to open it at full resolution.
+            </figcaption>
+          </figure>
 
-    <section class="section hero is-light" id="bibtex">
-      <div class="container is-max-desktop">
-        <div class="columns is-centered bibtex-columns">
-          <div class="column bibtex-column">
-            <h2 class="title is-3">BibTeX</h2>
-            <pre><code>@misc{karouzos2026preference,
+          <div class="testbed-grid" aria-label="Evaluation testbeds">
+            <div><strong>Summarization</strong><span>Reddit TL;DR → CNN/DailyMail</span></div>
+            <div><strong>QA helpfulness</strong><span>AskEngineers → AskCulinary</span></div>
+            <div><strong>Safety</strong><span>Cybercrime → Violence / Physical Harm</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section hero is-light publication-body artifact-section">
+        <div class="container is-max-desktop">
+          <div class="content project-section">
+            <h2 class="title is-3">What are the main findings?</h2>
+            <ul class="finding-list">
+              <li>
+                <strong>Pseudo-labeling dominates summarization transfer.</strong> For Llama-3.1-8B, pseudo-labeled SFT achieves the highest target
+                win rate (83.37), while lifting OLMo-3-7B DPO to 72.26, above all non-synthetic methods.
+              </li>
+              <li>
+                <strong>Offline alignment over-specializes to the source domain.</strong> Source-only DPO on Llama-3.1-8B reaches 89.87 in domain but
+                58.09 out of domain; GRPO keeps its gap at 3.79 on the same testbed.
+              </li>
+              <li>
+                <strong>QA helpfulness is comparatively stable under the near-domain shift.</strong> Scores remain within a narrow ±8-point gap, but a
+                domain-aware judge reveals that standard helpfulness evaluation can miss epistemic and stylistic mismatch.
+              </li>
+              <li>
+                <strong>Safety transfer is model- and objective-dependent.</strong> Pseudo-labeled objectives other than PPO exceed 95% target safety
+                on Llama-3.1-8B. Without pseudo-labeling, KTO achieves the highest OLMo-3-7B target safety score (76.49%).
+              </li>
+            </ul>
+          </div>
+
+          <figure class="publication-figure wide-figure">
+            <a href="static/images/main-results.png" title="Open the full-resolution results table">
+              <img
+                src="static/images/main-results.png"
+                alt="Full results table with source and target performance for summarization, QA helpfulness, and safety across SFT, DPO, KTO, ORPO, PPO, and GRPO."
+                width="2802"
+                height="1572"
+                loading="lazy"
+              />
+            </a>
+            <figcaption>
+              Table 1: Source and target performance across the three testbeds. Summarization and QA report LLM-as-a-judge win rates; safety reports
+              safety score. Click the table to open it at full resolution.
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="section publication-body artifact-section">
+        <div class="container is-max-desktop">
+          <div class="content project-section">
+            <h2 class="title is-3">Why does pseudo-labeling help?</h2>
+            <p>
+              Teacher quality alone does not close the domain gap. For DPO, source-domain pseudo-labeling raises CNN/DailyMail target win rate from
+              58.09 to 62.88, while target-domain pseudo-labeling reaches 78.50. Because the teacher is the same in both synthetic conditions, the
+              15.62-point difference isolates the value of domain relevance.
+            </p>
+          </div>
+
+          <div class="table-container paper-table">
+            <table class="table is-striped is-hoverable is-fullwidth">
+              <thead>
+                <tr>
+                  <th>Method</th>
+                  <th>SFT data</th>
+                  <th>Preference data</th>
+                  <th>Source</th>
+                  <th>Target</th>
+                  <th>Gap</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>SFT</th>
+                  <td>D<sub>S</sub></td>
+                  <td>—</td>
+                  <td>59.57</td>
+                  <td>36.07</td>
+                  <td>23.50</td>
+                </tr>
+                <tr>
+                  <th>SFT</th>
+                  <td>D<sub>S</sub><sup>synth</sup></td>
+                  <td>—</td>
+                  <td>72.41</td>
+                  <td>44.15</td>
+                  <td>28.26</td>
+                </tr>
+                <tr>
+                  <th>SFT</th>
+                  <td>D<sub>T</sub><sup>synth</sup></td>
+                  <td>—</td>
+                  <td>95.70</td>
+                  <td><strong>83.37</strong></td>
+                  <td>12.33</td>
+                </tr>
+                <tr>
+                  <th>DPO</th>
+                  <td>D<sub>S</sub></td>
+                  <td>D<sub>S</sub></td>
+                  <td>89.87</td>
+                  <td>58.09</td>
+                  <td>31.78</td>
+                </tr>
+                <tr>
+                  <th>DPO</th>
+                  <td>D<sub>S</sub><sup>synth</sup></td>
+                  <td>D<sub>S</sub><sup>synth</sup></td>
+                  <td>90.52</td>
+                  <td>62.88</td>
+                  <td>27.64</td>
+                </tr>
+                <tr>
+                  <th>DPO</th>
+                  <td>D<sub>T</sub><sup>synth</sup></td>
+                  <td>D<sub>T</sub><sup>synth</sup></td>
+                  <td>95.79</td>
+                  <td><strong>78.50</strong></td>
+                  <td>17.29</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="figure-caption">
+            Table 2: Isolating teacher quality from domain relevance on TL;DR → CNN/DailyMail with Llama-3.1-8B. D<sub>S</sub><sup>synth</sup> denotes
+            source-domain pseudo-labeled data.
+          </p>
+        </div>
+      </section>
+
+      <section class="section hero is-light publication-body artifact-section">
+        <div class="container is-max-desktop">
+          <div class="content project-section">
+            <h2 class="title is-3">What is the cost of pseudo-labeling?</h2>
+            <p>
+              Despite high win rates, pseudo-labeling sharply contracts semantic and syntactic variety in summarization. Semantic diversity drops to
+              0.07–0.08 across offline objectives, and syntactic diversity falls from 0.86 for source-only SFT to 0.51 for pseudo-labeled SFT.
+            </p>
+            <p>
+              Online RL preserves more diversity under pseudo-labeling: PPO and GRPO retain semantic diversity of 0.22 and 0.25, respectively,
+              compared with 0.07–0.08 for the offline objectives.
+            </p>
+          </div>
+
+          <figure class="publication-figure medium-figure">
+            <img
+              src="static/images/diversity-analysis.png"
+              alt="Bar plots of syntactic, semantic, and logical diversity for six objectives under source-only, target-SFT, mix-SFT, and pseudo-labeled adaptation."
+              width="1222"
+              height="1113"
+              loading="lazy"
+            />
+            <figcaption>Figure 2: Syntactic, semantic, and logical diversity in summarization with Llama-3.1-8B.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="section publication-body artifact-section">
+        <div class="container is-max-desktop">
+          <div class="content project-section">
+            <h2 class="title is-3">Can a standard judge miss domain mismatch?</h2>
+            <p>
+              Yes. A domain-agnostic helpfulness judge can reward a logically sound response even when it violates AskCulinary’s expected expertise
+              and pragmatic style. A domain-aware judge lowers source-only DPO by 3.83 points, while pseudo-labeled DPO improves by 3.48 points,
+              revealing genuine target-domain calibration.
+            </p>
+          </div>
+
+          <div class="table-container paper-table">
+            <table class="table is-striped is-hoverable is-fullwidth">
+              <thead>
+                <tr>
+                  <th>Method</th>
+                  <th>SFT data</th>
+                  <th>Preference data</th>
+                  <th>Standard</th>
+                  <th>Domain-aware</th>
+                  <th>Δ</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>SFT</th>
+                  <td>D<sub>S</sub></td>
+                  <td>—</td>
+                  <td>60.08</td>
+                  <td>57.06</td>
+                  <td>−3.02</td>
+                </tr>
+                <tr>
+                  <th>SFT</th>
+                  <td>D<sub>S+T</sub></td>
+                  <td>—</td>
+                  <td>60.68</td>
+                  <td>60.24</td>
+                  <td>−0.44</td>
+                </tr>
+                <tr>
+                  <th>SFT</th>
+                  <td>D<sub>T</sub></td>
+                  <td>—</td>
+                  <td>64.94</td>
+                  <td>61.45</td>
+                  <td>−3.49</td>
+                </tr>
+                <tr>
+                  <th>SFT</th>
+                  <td>D<sub>T</sub><sup>synth</sup></td>
+                  <td>—</td>
+                  <td>76.04</td>
+                  <td>77.60</td>
+                  <td>+1.56</td>
+                </tr>
+                <tr>
+                  <th>DPO</th>
+                  <td>D<sub>S</sub></td>
+                  <td>D<sub>S</sub></td>
+                  <td>61.45</td>
+                  <td>57.62</td>
+                  <td>−3.83</td>
+                </tr>
+                <tr>
+                  <th>DPO</th>
+                  <td>D<sub>S+T</sub></td>
+                  <td>D<sub>S</sub></td>
+                  <td>58.80</td>
+                  <td>60.94</td>
+                  <td>+2.14</td>
+                </tr>
+                <tr>
+                  <th>DPO</th>
+                  <td>D<sub>T</sub></td>
+                  <td>D<sub>S</sub></td>
+                  <td>64.69</td>
+                  <td>61.92</td>
+                  <td>−2.77</td>
+                </tr>
+                <tr>
+                  <th>DPO</th>
+                  <td>D<sub>T</sub><sup>synth</sup></td>
+                  <td>D<sub>T</sub><sup>synth</sup></td>
+                  <td>75.52</td>
+                  <td><strong>79.00</strong></td>
+                  <td><strong>+3.48</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="figure-caption">
+            Table 3: Standard versus domain-aware judge win rates on AskCulinary with Llama-3.1-8B. Δ = domain-aware − standard.
+          </p>
+        </div>
+      </section>
+
+      <section class="section hero is-light publication-body artifact-section">
+        <div class="container is-max-desktop">
+          <div class="content project-section">
+            <h2 class="title is-3">How much synthetic data is needed?</h2>
+            <p>
+              Reducing the pseudo-labeled data by 90% causes only small changes. For SFT, KTO, and ORPO, the 10% subset slightly outperforms the full
+              synthetic dataset on the target domain, indicating that the benefit is driven by domain relevance rather than volume.
+            </p>
+          </div>
+
+          <div class="table-container paper-table compact-table">
+            <table class="table is-striped is-hoverable is-fullwidth">
+              <thead>
+                <tr>
+                  <th rowspan="2">Method</th>
+                  <th rowspan="2">Dataset size</th>
+                  <th colspan="2">Win rate (%)</th>
+                </tr>
+                <tr>
+                  <th>Source</th>
+                  <th>Target</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th rowspan="2">SFT</th>
+                  <td>Full</td>
+                  <td>95.70</td>
+                  <td>83.37</td>
+                </tr>
+                <tr>
+                  <td>10%</td>
+                  <td>92.75</td>
+                  <td><strong>83.68</strong></td>
+                </tr>
+                <tr>
+                  <th rowspan="2">DPO</th>
+                  <td>Full</td>
+                  <td>95.79</td>
+                  <td><strong>78.50</strong></td>
+                </tr>
+                <tr>
+                  <td>10%</td>
+                  <td><strong>96.30</strong></td>
+                  <td>77.08</td>
+                </tr>
+                <tr>
+                  <th rowspan="2">KTO</th>
+                  <td>Full</td>
+                  <td><strong>95.37</strong></td>
+                  <td>83.01</td>
+                </tr>
+                <tr>
+                  <td>10%</td>
+                  <td>95.30</td>
+                  <td><strong>84.38</strong></td>
+                </tr>
+                <tr>
+                  <th rowspan="2">ORPO</th>
+                  <td>Full</td>
+                  <td><strong>96.80</strong></td>
+                  <td>82.38</td>
+                </tr>
+                <tr>
+                  <td>10%</td>
+                  <td>92.26</td>
+                  <td><strong>82.58</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="figure-caption">
+            Table 4: Data efficiency of pseudo-labeling on TL;DR → CNN/DailyMail with Llama-3.1-8B. The small setting uses 10% of the synthetic data.
+          </p>
+        </div>
+      </section>
+
+      <section class="section publication-body artifact-section">
+        <div class="container is-max-desktop">
+          <div class="content project-section">
+            <h2 class="title is-3">Does the order of SFT stages matter?</h2>
+            <p>
+              Strongly. Target SFT before source SFT reaches a 56.40 target win rate, compared with 35.22 in the reverse order. Adding an intermediate
+              source-SFT stage before source DPO raises target performance further, from 56.82 to 65.56.
+            </p>
+          </div>
+
+          <div class="table-container paper-table sequence-table">
+            <table class="table is-striped is-hoverable is-fullwidth">
+              <thead>
+                <tr>
+                  <th>Method</th>
+                  <th>Source win rate</th>
+                  <th>Target win rate</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="table-group">
+                  <th colspan="3">SFT order</th>
+                </tr>
+                <tr>
+                  <td>SFT D<sub>T</sub> → SFT D<sub>S</sub></td>
+                  <td><strong>67.23</strong></td>
+                  <td><strong>56.40</strong></td>
+                </tr>
+                <tr>
+                  <td>SFT D<sub>S</sub> → SFT D<sub>T</sub></td>
+                  <td>61.00</td>
+                  <td>35.22</td>
+                </tr>
+                <tr class="table-group">
+                  <th colspan="3">Intermediate step</th>
+                </tr>
+                <tr>
+                  <td>SFT D<sub>T</sub> → DPO D<sub>S</sub></td>
+                  <td>67.83</td>
+                  <td>56.82</td>
+                </tr>
+                <tr>
+                  <td>SFT D<sub>T</sub> → SFT D<sub>S</sub> → DPO D<sub>S</sub></td>
+                  <td><strong>91.88</strong></td>
+                  <td><strong>65.56</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="figure-caption">Table 5: Win rates on TL;DR → CNN/DailyMail with Llama-3.1-8B when varying the sequence of SFT stages.</p>
+        </div>
+      </section>
+
+      <section class="section publication-body qualitative-section">
+        <div class="container is-widescreen">
+          <div class="content project-section">
+            <h2 class="title is-3">Qualitative case studies</h2>
+            <p>
+              Aggregate win rates hide two different kinds of domain-shift behavior. The examples below reproduce the paper’s appendix outputs in
+              full, without the table layout or ellipses used in the main paper.
+            </p>
+          </div>
+
+          <section class="case-study artifact-case">
+            <div class="case-heading">
+              <span class="case-number">1</span>
+              <div>
+                <h3 class="title is-4">Epistemic drift: engineering advice in a culinary domain</h3>
+                <p>
+                  All responses answer the same AskCulinary prompt with Llama-3.1-8B and DPO. Source-only adaptation frames cooking as heat and fat
+                  management, while target adaptation moves toward culinary vocabulary and conventions.
+                </p>
+              </div>
+            </div>
+
+            <div class="qual-prompt">
+              <span class="qual-label">User prompt</span>
+              <p>
+                Whenever I roast a turkey or turkey parts I always put chopped celery/carrots/onions underneath in the sheet pan because that's what
+                the instructions typically tell me, but does it serve a purpose of somehow flavoring the turkey or is there another reason for this
+                practice? I was thinking it may have something to do with neutralizing the fat that drips down so it doesn't smoke/burn. I have some
+                string beans in the fridge and about to cook some turkey thighs, any reason I couldn't use those instead of the standard misen poix?
+              </p>
+            </div>
+
+            <div class="persona-legend" aria-label="Highlight legend">
+              <span><i class="legend-swatch culinary-swatch"></i>Culinary persona</span>
+              <span><i class="legend-swatch engineering-swatch"></i>Engineering persona</span>
+            </div>
+
+            <div class="comparison-grid context-grid">
+              <section class="response-block response-context">
+                <h4>Human reference</h4>
+                <p>
+                  If you are making roast potatoes I love placing the spuds under the bird (rack in between) and letting the fat drip down into them
+                </p>
+              </section>
+              <section class="response-block response-context">
+                <h4>Base model</h4>
+                <p>
+                  Thanks. It is not to flavor the turkey; it is to <mark class="persona-culinary">flavor the gravy</mark> that you will make from the
+                  drippings. A lot of people don't like celery and carrots in their gravy, so they use them as a
+                  <mark class="persona-culinary">flavoring agent</mark> for the gravy, then remove them before serving the gravy.
+                </p>
+              </section>
+            </div>
+
+            <div class="carousel-toolbar">
+              <p>Compare the four adaptation strategies</p>
+              <div class="carousel-controls">
+                <button type="button" data-carousel-prev="epistemic-carousel" aria-label="Show the previous adaptation">← Previous</button>
+                <span data-carousel-status="epistemic-carousel" aria-live="polite">1 / 4</span>
+                <button type="button" data-carousel-next="epistemic-carousel" aria-label="Show the next adaptation">Next →</button>
+              </div>
+            </div>
+
+            <div
+              class="qual-carousel response-carousel"
+              id="epistemic-carousel"
+              tabindex="0"
+              aria-label="Full outputs for four adaptation strategies"
+            >
+              <section class="response-block carousel-slide">
+                <h4>
+                  Source-only adaptation <span>SFT D<sub>S</sub> → DPO D<sub>S</sub></span>
+                </h4>
+                <p>
+                  It’s not just for flavor. It’s to <mark class="persona-engineering">keep the bird from sticking to the pan</mark> and to help
+                  <mark class="persona-engineering">protect the bottom of the bird from burning</mark>. When you cook meat,
+                  <mark class="persona-engineering">juices (fat) come out</mark> of the meat. If you just put raw meat on a bare pan, the juices will
+                  run right off the pan and onto the bottom of your oven. This is bad for two reasons: 1) it
+                  <mark class="persona-engineering">creates smoke</mark>, which is why you get that greasy “smoky” smell when you roast a chicken; and
+                  2) it can cause <mark class="persona-engineering">flare ups in the oven and start a fire</mark> (I’ve had this happen once, luckily
+                  I caught it early). When you put vegetables underneath the meat, they <mark class="persona-engineering">soak up the fat</mark> and
+                  help keep it in the pan. They also make for a <mark class="persona-engineering">nice crusty base</mark> that protects the bottom of
+                  the meat and <mark class="persona-engineering">keeps it from sticking and burning</mark>. You’ll see chefs doing this with all kinds
+                  of meats, not just poultry. It’s especially important if you’re cooking with a
+                  <mark class="persona-engineering">very fatty cut of meat</mark>, like a prime rib roast or a pork shoulder.
+                </p>
+              </section>
+
+              <section class="response-block carousel-slide">
+                <h4>
+                  Mixed-domain SFT <span>SFT D<sub>S+T</sub> → DPO D<sub>S</sub></span>
+                </h4>
+                <p>
+                  It’s not just about flavor. Carrots, onions, and celery are a <mark class="persona-culinary">great base for making stock</mark> from
+                  the drippings. It will give you a <mark class="persona-culinary">much better tasting stock</mark>. You can also use
+                  <mark class="persona-culinary">herbs and spices</mark> in the mix for <mark class="persona-culinary">added flavor</mark>. The
+                  veggies themselves will <mark class="persona-culinary">flavor the drippings</mark>. Once you’ve roasted your turkey, you’ll have an
+                  <mark class="persona-culinary">excellent base for gravy</mark>. There are lots of reasons to use vegetables in the bottom of your
+                  roasting pan.
+                </p>
+              </section>
+
+              <section class="response-block carousel-slide">
+                <h4>
+                  Target-first SFT <span>SFT D<sub>T</sub> → DPO D<sub>S</sub></span>
+                </h4>
+                <p>
+                  It’s not just about flavor. Carrots, celery, and onions are a great example of the
+                  <mark class="persona-culinary">“trinity” in French cooking (aka mirepoix)</mark> because they all have a
+                  <mark class="persona-engineering">lot of water content</mark>. So when you’re roasting a bird, you can use them to
+                  <mark class="persona-engineering">soak up some of the fat drippings</mark>. That being said, you should *never* use them to clean
+                  the pan. You need to leave them in the oven because they will
+                  <mark class="persona-engineering">burn to a crisp and stick to the pan</mark>. They’re just a
+                  <mark class="persona-culinary">flavor booster</mark> and <mark class="persona-engineering">moisture absorber</mark>. And while we’re
+                  here, let’s talk about basting. You should never baste. Basting only moves
+                  <mark class="persona-engineering">moisture from the inside of the bird to the outside</mark>. This makes the skin soggy and doesn’t
+                  make the bird cook any faster. The skin will crisp up when the <mark class="persona-engineering">juices on top evaporate</mark>.
+                </p>
+              </section>
+
+              <section class="response-block carousel-slide">
+                <h4>
+                  Target pseudo-labeling <span>SFT D<sub>T</sub><sup>synth</sup> → DPO D<sub>T</sub><sup>synth</sup></span>
+                </h4>
+                <p>
+                  Roasting a turkey with vegetables such as celery, carrots, and onions is a common practice, often recommended by cooking
+                  instructions. While the purpose of using these vegetables is not always explicitly stated, they can serve multiple functions in the
+                  cooking process. One potential reason for using a <mark class="persona-culinary">mirepoix</mark>, which consists of diced celery,
+                  carrots, and onions, is to <mark class="persona-culinary">flavor the turkey</mark>. The combination of these three ingredients
+                  provides a <mark class="persona-culinary">savory base</mark> that can
+                  <mark class="persona-culinary">infuse the meat with flavor</mark>. Additionally, the vegetables can also
+                  <mark class="persona-engineering">add moisture</mark> to the dish, helping to keep the turkey juicy and tender.
+                </p>
+              </section>
+            </div>
+
+            <p class="case-takeaway">
+              <strong>Takeaway.</strong> A domain-agnostic judge can rate all four answers as helpful because each supplies a logical justification,
+              while missing whether the answer sounds like appropriate culinary expertise.
+            </p>
+          </section>
+
+          <section class="case-study artifact-case">
+            <div class="case-heading">
+              <span class="case-number">2</span>
+              <div>
+                <h3 class="title is-4">Structural mode collapse under pseudo-labeling</h3>
+                <p>
+                  The target pseudo-labeled DPO model maps three unrelated CNN/DailyMail articles onto the same discourse skeleton. The repeated
+                  template appears in roughly 10% of its summaries, versus roughly 0.2% for the source-only model and human references, closely
+                  tracking the teacher’s rate of 10.5%.
+                </p>
+              </div>
+            </div>
+
+            <div class="carousel-toolbar">
+              <p>Compare three unrelated articles</p>
+              <div class="carousel-controls">
+                <button type="button" data-carousel-prev="collapse-carousel" aria-label="Show the previous article">← Previous</button>
+                <span data-carousel-status="collapse-carousel" aria-live="polite">1 / 3</span>
+                <button type="button" data-carousel-next="collapse-carousel" aria-label="Show the next article">Next →</button>
+              </div>
+            </div>
+
+            <div
+              class="qual-carousel collapse-carousel"
+              id="collapse-carousel"
+              tabindex="0"
+              aria-label="Full mode-collapse outputs for three unrelated articles"
+            >
+              <section class="collapse-example carousel-slide">
+                <h4>Food trends <span>Lifestyle review</span></h4>
+                <div class="comparison-grid collapse-grid">
+                  <div class="response-block response-context">
+                    <h5>Human reference</h5>
+                    <p>
+                      Dietitian Sophie Claessens picks the latest ‘miracle’ foods from fads. Charcoal to ‘detox’, while freekah is new supergrain on
+                      the culinary scene. Fermented foods like pickled cabbage act like a probiotic yoghurt. And spiralizers to create vegetable
+                      spaghetti can help boost weight loss.
+                    </p>
+                  </div>
+                  <div class="response-block">
+                    <h5>Source-only DPO</h5>
+                    <p>
+                      Some of the latest food fads are worth a try, others are bonkers. The key is to use common sense and ask yourself whether it's
+                      sustainable and whether you'll be able to stick with it. Try spiralizing, freekah, fermented foods and bone broth. Avoid
+                      activated charcoal and ‘detox’ products.
+                    </p>
+                  </div>
+                  <div class="response-block collapsed-output">
+                    <h5>Target pseudo-labeled DPO</h5>
+                    <p>
+                      <mark class="template-marker">The article discusses</mark> the latest food trends and their potential health benefits, including
+                      activated charcoal, spiralizing, freekeh, fermented foods, sprouted foods, and bone broth. While some of these trends may have
+                      some merit, others lack scientific evidence and can be detrimental to one's health.
+                      <mark class="template-marker">The author advises</mark> against “detoxing” with activated charcoal, which has only been proven
+                      effective for acute poisoning, and cautions against replacing complex carbohydrates with spiralized vegetables. Freekeh, a young
+                      green wheat, is a nutritious option, but can be expensive. Fermented foods and bone broth are beneficial for gut health and
+                      overall wellness.
+                    </p>
+                  </div>
+                </div>
+              </section>
+
+              <section class="collapse-example carousel-slide">
+                <h4>Kefalonia <span>Travel and leisure</span></h4>
+                <div class="comparison-grid collapse-grid">
+                  <div class="response-block response-context">
+                    <h5>Human reference</h5>
+                    <p>
+                      Kefalonia is stunning and doesn't play the Captain Corelli's Mandolin card. Island hasn't been tainted by the crowds its Greek
+                      counterparts get. It's a quarter of the size of Spain's Majorca but with a 20th of the tourists. The one must-do outing in
+                      Kefalonia is to Fiskardo, a lovely harbour.
+                    </p>
+                  </div>
+                  <div class="response-block">
+                    <h5>Source-only DPO</h5>
+                    <p>
+                      Kefalonia, the Greek island featured in Louis de Bernières's novel Captain Corelli's Mandolin, is still remarkably unspoilt.
+                      It's a stunning place with a few surprises including the regular appearance of the stray cat named Arthur.
+                    </p>
+                  </div>
+                  <div class="response-block collapsed-output">
+                    <h5>Target pseudo-labeled DPO</h5>
+                    <p>
+                      <mark class="template-marker">The article discusses</mark> the Greek island of Kefalonia, which was the setting for the novel
+                      and film “Captain Corelli's Mandolin”. Despite being a popular tourist destination, Kefalonia remains relatively untouched by
+                      mass tourism, with only a few hotels and no large resorts. <mark class="template-marker">The author describes</mark> their
+                      experience staying in a villa with a stunning view of Lourdas Beach and meeting a stray cat named Arthur, who became a frequent
+                      visitor. They also mention a wildfire that broke out during their stay and the efforts to contain it.
+                      <mark class="template-marker">The article recommends</mark> visiting Fiskardo, a lovely harbor, and Tassia, a waterfront
+                      restaurant.
+                    </p>
+                  </div>
+                </div>
+              </section>
+
+              <section class="collapse-example carousel-slide">
+                <h4>Video technology in football <span>Sports opinion</span></h4>
+                <div class="comparison-grid collapse-grid">
+                  <div class="response-block response-context">
+                    <h5>Human reference</h5>
+                    <p>
+                      Celtic were denied place in Scottish Cup final by shocking decision. Leigh Griffiths' header was blocked by Josh Meekings' hand.
+                      None of the officials managed to spot the game-changing decision. But FIFA will require a higher profile blunder to change their
+                      laws.
+                    </p>
+                  </div>
+                  <div class="response-block">
+                    <h5>Source-only DPO</h5>
+                    <p>
+                      Frank Lampard's disallowed goal in 2010 prompted FIFA to introduce goal-line technology, and Scottish fans must hope that
+                      another high profile injustice will force a similar change to allow video review.
+                    </p>
+                  </div>
+                  <div class="response-block collapsed-output">
+                    <h5>Target pseudo-labeled DPO</h5>
+                    <p>
+                      <mark class="template-marker">The article discusses</mark> the reluctance of FIFA to adopt video technology to improve
+                      officiating in football, despite the growing number of errors and injustices in the game.
+                      <mark class="template-marker">The author cites</mark> examples of goal-line technology being trialed after Frank Lampard's
+                      disallowed goal in the 2010 World Cup, but notes that FIFA has been slow to implement it.
+                      <mark class="template-marker">The article suggests</mark> that FIFA only acts when a high-profile incident occurs, and that
+                      Scottish football fans may need to wait until the World Cup in Russia to see any changes.
+                      <mark class="template-marker">The author argues</mark> that video technology, such as Hawk-Eye, could help reduce errors and
+                      improve the game.
+                    </p>
+                  </div>
+                </div>
+              </section>
+            </div>
+
+            <p class="case-takeaway">
+              <strong>Takeaway.</strong> The summaries remain fluent and informative, so the judge rewards them, but the student inherits the
+              teacher’s repeated discourse frame instead of preserving the target domain’s tonal variation.
+            </p>
+          </section>
+        </div>
+      </section>
+
+      <section class="section hero is-light" id="bibtex">
+        <div class="container is-max-desktop">
+          <div class="columns is-centered bibtex-columns">
+            <div class="column bibtex-column">
+              <h2 class="title is-3">BibTeX</h2>
+              <pre><code>@misc{karouzos2026preference,
   title         = {An Empirical Study on Preference Tuning Generalization and Diversity Under Domain Shift},
   author        = {Constantinos Karouzos and Xingwei Tan and Nikolaos Aletras},
   year          = {2026},
@@ -481,44 +885,65 @@
   archivePrefix = {arXiv},
   primaryClass  = {cs.CL}
 }</code></pre>
-            <p class="citation-note">The arXiv citation is shown until the final ACL Anthology proceedings record is available.</p>
+              <p class="citation-note">The arXiv citation is shown until the final ACL Anthology proceedings record is available.</p>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section class="section acknowledgements-section" id="acknowledgements">
-      <div class="container is-max-desktop">
-        <div class="content acknowledgements-copy">
-          <h2 class="title is-3">Acknowledgments</h2>
-          <p>We thank Jasivan Sivakumar, Vynska Amalia Permadi, Sam Lewis-Lim, Yanwen Peng, and Atsuki Yamaguchi for their valuable help and feedback. CK is supported by the Centre for Doctoral Training in Speech and Language Technologies (SLT) and their Applications funded by UK Research and Innovation grant [grant number EP/S023062/1]. XT and NA are supported by the EPSRC [grant number EP/Y009800/1], through funding from Responsible AI UK (KP0016) as a Keystone project.</p>
-          <p>We acknowledge (1) IT Services at the University of Sheffield for the provision of services for high-performance computing; (2) the use of the University of Oxford Advanced Research Computing (ARC) facility; (3) the EuroHPC Joint Undertaking for awarding this project access to the EuroHPC supercomputer LEONARDO, hosted by CINECA (Italy) and the LEONARDO consortium through a EuroHPC Development Access call; (4) the use of resources provided by the Isambard-AI National AI Research Resource (AIRR). Isambard-AI is operated by the University of Bristol and is funded by the UK Government’s Department for Science, Innovation and Technology (DSIT) via UK Research and Innovation; and the Science and Technology Facilities Council [ST/AIRR/I-A-I/1023].</p>
+      <section class="section acknowledgements-section" id="acknowledgements">
+        <div class="container is-max-desktop">
+          <div class="content acknowledgements-copy">
+            <h2 class="title is-3">Acknowledgments</h2>
+            <p>
+              We thank Jasivan Sivakumar, Vynska Amalia Permadi, Sam Lewis-Lim, Yanwen Peng, and Atsuki Yamaguchi for their valuable help and
+              feedback. CK is supported by the Centre for Doctoral Training in Speech and Language Technologies (SLT) and their Applications funded by
+              UK Research and Innovation grant [grant number EP/S023062/1]. XT and NA are supported by the EPSRC [grant number EP/Y009800/1], through
+              funding from Responsible AI UK (KP0016) as a Keystone project.
+            </p>
+            <p>
+              We acknowledge (1) IT Services at the University of Sheffield for the provision of services for high-performance computing; (2) the use
+              of the University of Oxford Advanced Research Computing (ARC) facility; (3) the EuroHPC Joint Undertaking for awarding this project
+              access to the EuroHPC supercomputer LEONARDO, hosted by CINECA (Italy) and the LEONARDO consortium through a EuroHPC Development Access
+              call; (4) the use of resources provided by the Isambard-AI National AI Research Resource (AIRR). Isambard-AI is operated by the
+              University of Bristol and is funded by the UK Government’s Department for Science, Innovation and Technology (DSIT) via UK Research and
+              Innovation; and the Science and Technology Facilities Council [ST/AIRR/I-A-I/1023].
+            </p>
 
-          <div class="supporter-logos" aria-label="Supporting institutions">
-            <a href="https://www.sheffield.ac.uk/" aria-label="Visit The University of Sheffield website">
-              <img src="static/images/logos/sheffield_white.png" alt="The University of Sheffield" width="1500" height="473" loading="lazy">
-            </a>
-            <a href="https://slt-cdt.sheffield.ac.uk/" aria-label="Visit the SLT Centre for Doctoral Training website">
-              <img src="static/images/logos/slt_white.png" alt="SLT Centre for Doctoral Training" width="350" height="137" loading="lazy">
-            </a>
-            <a href="https://www.ukri.org/" aria-label="Visit the UK Research and Innovation website">
-              <img src="static/images/logos/ukri_white.png" alt="UK Research and Innovation" width="1455" height="429" loading="lazy">
-            </a>
+            <div class="supporter-logos" aria-label="Supporting institutions">
+              <a href="https://www.sheffield.ac.uk/" aria-label="Visit The University of Sheffield website">
+                <img src="static/images/logos/sheffield_white.png" alt="The University of Sheffield" width="1500" height="473" loading="lazy" />
+              </a>
+              <a href="https://slt-cdt.sheffield.ac.uk/" aria-label="Visit the SLT Centre for Doctoral Training website">
+                <img src="static/images/logos/slt_white.png" alt="SLT Centre for Doctoral Training" width="350" height="137" loading="lazy" />
+              </a>
+              <a href="https://www.ukri.org/" aria-label="Visit the UK Research and Innovation website">
+                <img src="static/images/logos/ukri_white.png" alt="UK Research and Innovation" width="1455" height="429" loading="lazy" />
+              </a>
+            </div>
+
+            <h3 class="title is-5">Website acknowledgment</h3>
+            <p>
+              This project page is built from the
+              <a href="https://github.com/eliahuhorwitz/Academic-project-page-template">Academic Project Page Template</a> by Eliahu Horwitz, itself
+              adapted from the <a href="https://nerfies.github.io/">Nerfies</a> project page. The template is licensed under
+              <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. Page text, figures, tables, and qualitative examples are
+              adapted from the camera-ready paper by the authors.
+            </p>
           </div>
+        </div>
+      </section>
+    </main>
 
-          <h3 class="title is-5">Website acknowledgment</h3>
-          <p>This project page is built from the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template">Academic Project Page Template</a> by Eliahu Horwitz, itself adapted from the <a href="https://nerfies.github.io/">Nerfies</a> project page. The template is licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. Page text, figures, tables, and qualitative examples are adapted from the camera-ready paper by the authors.</p>
+    <footer class="footer">
+      <div class="container">
+        <div class="content has-text-centered footer-copy">
+          <p>
+            <a href="#acknowledgements">Website acknowledgment</a> ·
+            <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>
+          </p>
         </div>
       </div>
-    </section>
-  </main>
-
-  <footer class="footer">
-    <div class="container">
-      <div class="content has-text-centered footer-copy">
-        <p><a href="#acknowledgements">Website acknowledgment</a> · <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a></p>
-      </div>
-    </div>
-  </footer>
-</body>
+    </footer>
+  </body>
 </html>

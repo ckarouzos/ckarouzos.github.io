@@ -1,8 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".qual-carousel").forEach((carousel) => {
-    const slides = Array.from(carousel.children).filter(
-      (child) => child.classList.contains("carousel-slide"),
-    );
+    const slides = Array.from(carousel.children).filter((child) => child.classList.contains("carousel-slide"));
     const previous = document.querySelector('[data-carousel-prev="' + carousel.id + '"]');
     const next = document.querySelector('[data-carousel-next="' + carousel.id + '"]');
     const status = document.querySelector('[data-carousel-status="' + carousel.id + '"]');
@@ -40,19 +38,27 @@ document.addEventListener("DOMContentLoaded", () => {
         showSlide(activeIndex + 1);
       }
     });
-    carousel.addEventListener("touchstart", (event) => {
-      touchStartX = event.changedTouches[0].clientX;
-    }, { passive: true });
-    carousel.addEventListener("touchend", (event) => {
-      if (touchStartX === null) {
-        return;
-      }
-      const distance = event.changedTouches[0].clientX - touchStartX;
-      if (Math.abs(distance) >= 50) {
-        showSlide(activeIndex + (distance < 0 ? 1 : -1));
-      }
-      touchStartX = null;
-    }, { passive: true });
+    carousel.addEventListener(
+      "touchstart",
+      (event) => {
+        touchStartX = event.changedTouches[0].clientX;
+      },
+      { passive: true }
+    );
+    carousel.addEventListener(
+      "touchend",
+      (event) => {
+        if (touchStartX === null) {
+          return;
+        }
+        const distance = event.changedTouches[0].clientX - touchStartX;
+        if (Math.abs(distance) >= 50) {
+          showSlide(activeIndex + (distance < 0 ? 1 : -1));
+        }
+        touchStartX = null;
+      },
+      { passive: true }
+    );
 
     carousel.classList.add("carousel-ready");
     const toolbar = carousel.previousElementSibling;
