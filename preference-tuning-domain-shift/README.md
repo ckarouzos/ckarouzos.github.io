@@ -32,13 +32,12 @@ The expected public URL is:
 
 <https://ckarouzos.github.io/preference-tuning-domain-shift/>
 
-All page assets use relative paths, so the folder can be renamed. If the public slug changes, also update the canonical, Open Graph, schema.org, and `citation_pdf_url` URLs in `index.html`.
+All page assets use relative paths, so the folder can be renamed. If the public slug changes, also update the canonical, Open Graph, and schema.org URLs in `index.html`.
 
 ## Final publication updates
 
 - Replace the arXiv BibTeX with the ACL Anthology proceedings record when it becomes available.
 - Update the arXiv link if a new version is uploaded.
-- Keep `static/pdfs/paper.pdf` synchronized with the camera-ready manuscript.
 - Re-generate `static/images/social-preview.png` if the title or central takeaway changes.
 - Keep the Academic Project Page Template attribution and CC BY-SA 4.0 notice in the footer.
 
